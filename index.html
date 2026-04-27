@@ -338,14 +338,14 @@ var PS_COLORS   = ['#00f0ff','#ff4466','#a855f7','#ffaa00'];
 var BILL_COLORS = ['#22c55e','#f59e0b'];
 
 var psDevs = [
-  {id:'p0',name:'PS-1',color:'#00f0ff',type:'ps',running:false,paused:false,secs:0,sessions:[]},
-  {id:'p1',name:'PS-2',color:'#ff4466',type:'ps',running:false,paused:false,secs:0,sessions:[]},
-  {id:'p2',name:'PS-3',color:'#a855f7',type:'ps',running:false,paused:false,secs:0,sessions:[]},
-  {id:'p3',name:'PS-4',color:'#ffaa00',type:'ps',running:false,paused:false,secs:0,sessions:[]}
+  {id:'p0',name:'PS-1',color:'#00f0ff',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null},
+  {id:'p1',name:'PS-2',color:'#ff4466',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null},
+  {id:'p2',name:'PS-3',color:'#a855f7',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null},
+  {id:'p3',name:'PS-4',color:'#ffaa00',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null}
 ];
 var billDevs = [
-  {id:'b0',name:'Stol-1',color:'#22c55e',type:'bill',running:false,paused:false,secs:0,sessions:[]},
-  {id:'b1',name:'Stol-2',color:'#f59e0b',type:'bill',running:false,paused:false,secs:0,sessions:[]}
+  {id:'b0',name:'Stol-1',color:'#22c55e',type:'bill',running:false,paused:false,secs:0,sessions:[],startTime:null},
+  {id:'b1',name:'Stol-2',color:'#f59e0b',type:'bill',running:false,paused:false,secs:0,sessions:[],startTime:null}
 ];
 
 function allDevs() { return psDevs.concat(billDevs); }
@@ -474,12 +474,30 @@ function refreshSummary() {
 }
 
 // ── ACTIONS ──
-function startDev(id)  { var d=findDev(id); d.running=true;  d.paused=false; renderAll(); saveData(); }
-function pauseDev(id)  { var d=findDev(id); d.running=false; d.paused=true;  renderAll(); saveData(); }
-function resumeDev(id) { var d=findDev(id); d.running=true;  d.paused=false; renderAll(); saveData(); }
+function startDev(id)  {
+  var d=findDev(id);
+  d.running=true; d.paused=false;
+  d.startTime = Date.now() - (d.secs * 1000);
+  renderAll(); saveData();
+}
+function pauseDev(id)  {
+  var d=findDev(id);
+  if(d.startTime) d.secs = Math.floor((Date.now() - d.startTime) / 1000);
+  d.running=false; d.paused=true; d.startTime=null;
+  renderAll(); saveData();
+}
+function resumeDev(id) {
+  var d=findDev(id);
+  d.running=true; d.paused=false;
+  d.startTime = Date.now() - (d.secs * 1000);
+  renderAll(); saveData();
+}
 
 function stopDev(id) {
   var d=findDev(id);
+  if(d.running && d.startTime) {
+    d.secs = Math.floor((Date.now() - d.startTime) / 1000);
+  }
   if(d.secs>0){
     d.sessions.unshift({
       date: new Date().toLocaleString('uz-UZ',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),
@@ -488,7 +506,7 @@ function stopDev(id) {
     });
     if(d.sessions.length>30) d.sessions.pop();
   }
-  d.running=false; d.paused=false; d.secs=0;
+  d.running=false; d.paused=false; d.secs=0; d.startTime=null;
   renderAll();
   saveData();
 }
@@ -545,12 +563,21 @@ function loadData() {
     var bd = localStorage.getItem('gc_billDevs');
     if(pd) {
       var loaded = JSON.parse(pd);
-      loaded.forEach(function(d){ d.running = false; }); // taymerlar to'xtatilgan holda qayta boshlansin
+      loaded.forEach(function(d){
+        // Agar sessiya ochiq qolgan bo'lsa, o'tgan vaqtni hisoblash
+        if(d.running && d.startTime) {
+          d.secs = Math.floor((Date.now() - d.startTime) / 1000);
+        }
+      });
       psDevs = loaded;
     }
     if(bd) {
       var loaded2 = JSON.parse(bd);
-      loaded2.forEach(function(d){ d.running = false; });
+      loaded2.forEach(function(d){
+        if(d.running && d.startTime) {
+          d.secs = Math.floor((Date.now() - d.startTime) / 1000);
+        }
+      });
       billDevs = loaded2;
     }
   } catch(e) {}
@@ -564,7 +591,12 @@ function setBillPrice(v){ var n=parseInt(v); if(n>0){ billPrice=n; saveData(); }
 var tickCount = 0;
 setInterval(function(){
   var any=false;
-  allDevs().forEach(function(d){ if(d.running){d.secs++;any=true;} });
+  allDevs().forEach(function(d){
+    if(d.running && d.startTime){
+      d.secs = Math.floor((Date.now() - d.startTime) / 1000);
+      any=true;
+    }
+  });
   if(any){
     allDevs().forEach(function(d){
       var tm=document.getElementById('tm-'+d.id);
@@ -575,7 +607,7 @@ setInterval(function(){
     refreshMeta();
     if(curTab==='sum') refreshSummary();
     tickCount++;
-    if(tickCount % 10 === 0) saveData(); // har 10 sekundda saqlash
+    if(tickCount % 10 === 0) saveData();
   }
 }, 1000);
 
