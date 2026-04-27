@@ -3,246 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>GameClub Timer</title>
+<title>GameClub</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
-</style>
-<style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+iframe,ins,[id*="ad"],[class*="ad"],a[href*="appsgeyser"]{display:none!important;height:0!important;}
+body { background:#07070f; color:#dde0ff; font-family:'Rajdhani','Roboto','Noto Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(100,100,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(100,100,255,.025) 1px,transparent 1px); background-size:36px 36px; pointer-events:none; z-index:0; }
+.app { position:relative; z-index:1; max-width:480px; margin:0 auto; padding-bottom:120px; }
 
-/* Reklama bloklash */
-iframe, ins, [id*="ad"], [class*="ad"], [class*="banner"],
-div[style*="position:fixed"][style*="bottom:0"],
-a[href*="appsgeyser"], div[class*="appsgeyser"] {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  overflow: hidden !important;
-}
-
-body {
-  background: #07070f;
-  color: #dde0ff;
-  font-family: 'Rajdhani', 'Roboto', 'Noto Sans', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image:
-    linear-gradient(rgba(100,100,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(100,100,255,0.025) 1px, transparent 1px);
-  background-size: 36px 36px;
-  pointer-events: none; z-index: 0;
-}
-.app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding-bottom: 120px; }
+/* LOCK SCREEN */
+.lock-screen { position:fixed; inset:0; background:#07070f; z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px; }
+.lock-logo { font-family:'Orbitron','Courier New',monospace; font-size:22px; font-weight:900; letter-spacing:3px; background:linear-gradient(90deg,#00f0ff,#a855f7,#ff4466); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; text-align:center; }
+.lock-sub { font-size:11px; color:#50507a; letter-spacing:3px; margin-bottom:40px; text-align:center; }
+.lock-icon { font-size:48px; margin-bottom:24px; }
+.lock-title { font-size:14px; color:#dde0ff; letter-spacing:2px; margin-bottom:20px; text-align:center; }
+.lock-input { width:100%; background:#0f0f1e; border:1px solid #1c1c38; border-radius:12px; color:#dde0ff; font-family:'Orbitron','Courier New',monospace; font-size:16px; padding:14px 18px; outline:none; text-align:center; letter-spacing:3px; margin-bottom:12px; }
+.lock-input:focus { border-color:#a855f7; }
+.lock-btn { width:100%; padding:14px; background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(0,240,255,.1)); border:1px solid rgba(168,85,247,.4); border-radius:12px; color:#a855f7; font-family:'Rajdhani','Roboto',sans-serif; font-size:15px; font-weight:700; letter-spacing:2px; cursor:pointer; text-transform:uppercase; }
+.lock-err { color:#ff4466; font-size:12px; text-align:center; margin-top:10px; min-height:18px; letter-spacing:1px; }
+.lock-attempts { color:#50507a; font-size:11px; text-align:center; margin-top:8px; }
+.lock-setup-info { background:rgba(0,240,255,.05); border:1px solid rgba(0,240,255,.15); border-radius:12px; padding:16px; margin-bottom:20px; width:100%; }
+.lock-setup-info p { font-size:12px; color:#50507a; line-height:1.6; }
+.lock-setup-info b { color:#00f0ff; }
 
 /* HEADER */
-header {
-  padding: 16px 18px 12px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid #1c1c38;
-  background: rgba(7,7,15,0.97);
-  position: sticky; top: 0; z-index: 100;
-}
-.logo {
-  font-family: 'Orbitron', 'Courier New', monospace;
-  font-size: 17px; font-weight: 900; letter-spacing: 2px;
-  background: linear-gradient(90deg, #00f0ff, #a855f7, #ff4466);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.logo-sub { font-size: 9px; color: #50507a; -webkit-text-fill-color: #50507a; letter-spacing: 3px; margin-top: 1px; display: block; }
-.hdr-lbl { font-size: 9px; color: #50507a; letter-spacing: 2px; text-align: right; }
-.hdr-val { font-family: 'Orbitron', 'Courier New', monospace; font-size: 15px; color: #22c55e; font-weight: 700; }
+header { padding:16px 18px 12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #1c1c38; background:rgba(7,7,15,.97); position:sticky; top:0; z-index:100; }
+.logo { font-family:'Orbitron','Courier New',monospace; font-size:17px; font-weight:900; letter-spacing:2px; background:linear-gradient(90deg,#00f0ff,#a855f7,#ff4466); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.logo-sub { font-size:9px; color:#50507a; -webkit-text-fill-color:#50507a; letter-spacing:3px; margin-top:1px; display:block; }
+.hdr-lbl { font-size:9px; color:#50507a; letter-spacing:2px; text-align:right; }
+.hdr-val { font-family:'Orbitron','Courier New',monospace; font-size:15px; color:#22c55e; font-weight:700; }
 
 /* TABS */
-.tabs {
-  display: flex;
-  background: #0f0f1e;
-  border-bottom: 1px solid #1c1c38;
-  position: sticky; top: 57px; z-index: 90;
-}
-.tab-btn {
-  flex: 1; padding: 13px 4px; text-align: center;
-  font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; font-weight: 700;
-  letter-spacing: 1px; color: #50507a;
-  cursor: pointer; border: none; background: none;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
-}
-.tab-btn.on { color: #dde0ff; }
-.tab-btn#t-ps.on   { border-bottom-color: #00f0ff; }
-.tab-btn#t-bill.on { border-bottom-color: #22c55e; }
-.tab-btn#t-sum.on  { border-bottom-color: #a855f7; }
+.tabs { display:flex; background:#0f0f1e; border-bottom:1px solid #1c1c38; position:sticky; top:57px; z-index:90; overflow-x:auto; }
+.tab-btn { flex:1; min-width:60px; padding:13px 4px; text-align:center; font-family:'Orbitron','Courier New',monospace; font-size:9px; font-weight:700; letter-spacing:1px; color:#50507a; cursor:pointer; border:none; background:none; border-bottom:2px solid transparent; transition:color .2s,border-color .2s; white-space:nowrap; }
+.tab-btn.on { color:#dde0ff; }
+.tab-btn#t-ps.on { border-bottom-color:#00f0ff; }
+.tab-btn#t-bill.on { border-bottom-color:#22c55e; }
+.tab-btn#t-sum.on { border-bottom-color:#a855f7; }
+.tab-btn#t-set.on { border-bottom-color:#f59e0b; }
 
-/* SECTIONS */
-.sec { display: none; }
-.sec.on { display: block; }
+.sec { display:none; }
+.sec.on { display:block; }
 
 /* PRICE ROW */
-.price-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 16px;
-  background: rgba(15,15,30,0.8);
-  border-bottom: 1px solid #1c1c38;
-}
-.price-row label { font-size: 11px; color: #50507a; letter-spacing: 1px; white-space: nowrap; }
-.price-row input {
-  background: #07070f; border: 1px solid #1c1c38;
-  border-radius: 7px; color: #dde0ff;
-  font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px;
-  padding: 7px 10px; width: 130px; outline: none;
-}
-.price-row span { font-size: 11px; color: #50507a; }
+.price-row { display:flex; align-items:center; gap:8px; padding:10px 16px; background:rgba(15,15,30,.8); border-bottom:1px solid #1c1c38; }
+.price-row label { font-size:11px; color:#50507a; letter-spacing:1px; white-space:nowrap; }
+.price-row input { background:#07070f; border:1px solid #1c1c38; border-radius:7px; color:#dde0ff; font-family:'Orbitron','Courier New',monospace; font-size:12px; padding:7px 10px; width:130px; outline:none; }
+.price-row span { font-size:11px; color:#50507a; }
 
 /* CARDS */
-.cards { padding: 13px; display: flex; flex-direction: column; gap: 11px; }
-
-.card {
-  border-radius: 16px; border: 1px solid #1c1c38;
-  background: #0f0f1e;
-  overflow: hidden; position: relative;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-.card.active { border-color: var(--ac); box-shadow: 0 0 24px -6px var(--ac); }
-.card::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: var(--ac); opacity: 0; transition: opacity 0.3s;
-}
-.card.active::before { opacity: 1; }
-.card.active::after {
-  content: ''; position: absolute;
-  top: 0; left: -100%; width: 50%; height: 3px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-  animation: scan 2s linear infinite;
-}
-@keyframes scan { to { left: 200%; } }
-
-.card-top { display: flex; align-items: center; padding: 14px 15px 10px; gap: 13px; }
-.card-icon {
-  width: 48px; height: 48px; border-radius: 13px;
-  background: rgba(255,255,255,0.04); border: 1px solid #1c1c38;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; font-weight: 700;
-  color: var(--ac); flex-shrink: 0;
-}
-.card.active .card-icon { background: rgba(255,255,255,0.08); border-color: var(--ac); }
-.card-info { flex: 1; }
-.name-row { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
-.card-name { font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px; font-weight: 700; color: var(--ac); letter-spacing: 1px; }
-.badge { font-size: 9px; padding: 2px 7px; border-radius: 20px; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; }
-.b-on    { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
-.b-off   { background: rgba(80,80,122,0.15); color: #50507a; border: 1px solid #1c1c38; }
-.b-pause { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
-.card-timer {
-  font-family: 'Orbitron', 'Courier New', monospace; font-size: 27px; font-weight: 900;
-  letter-spacing: 2px; color: #dde0ff; line-height: 1; margin-bottom: 3px;
-}
-.card.active .card-timer { color: var(--ac); }
-.card-earn { font-size: 13px; color: #50507a; font-weight: 600; }
-.card.active .card-earn { color: #22c55e; }
-.card-btns { display: flex; gap: 8px; padding: 0 13px 13px; }
-
-.btn {
-  flex: 1; padding: 12px 0; border-radius: 10px; border: none;
-  font-family: 'Rajdhani', 'Roboto', 'Noto Sans', sans-serif; font-size: 13px; font-weight: 700;
-  letter-spacing: 1px; cursor: pointer; transition: transform 0.12s;
-  text-transform: uppercase; outline: none;
-}
-.btn:active { transform: scale(0.95); }
-.btn-go { color: #000; background: var(--ac); }
-.btn-pause { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
-.btn-stop { background: rgba(255,68,102,0.1); color: #ff4466; border: 1px solid rgba(255,68,102,0.2); flex: 0 0 46px; font-size: 17px; }
-.btn-hist { background: rgba(255,255,255,0.04); color: #50507a; border: 1px solid #1c1c38; flex: 0 0 46px; font-size: 14px; }
+.cards { padding:13px; display:flex; flex-direction:column; gap:11px; }
+.card { border-radius:16px; border:1px solid #1c1c38; background:#0f0f1e; overflow:hidden; position:relative; transition:border-color .3s,box-shadow .3s; }
+.card.active { border-color:var(--ac); box-shadow:0 0 24px -6px var(--ac); }
+.card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--ac); opacity:0; transition:opacity .3s; }
+.card.active::before { opacity:1; }
+.card.active::after { content:''; position:absolute; top:0; left:-100%; width:50%; height:3px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent); animation:scan 2s linear infinite; }
+@keyframes scan { to { left:200%; } }
+.card-top { display:flex; align-items:center; padding:14px 15px 10px; gap:13px; }
+.card-icon { width:48px; height:48px; border-radius:13px; background:rgba(255,255,255,.04); border:1px solid #1c1c38; display:flex; align-items:center; justify-content:center; font-family:'Orbitron','Courier New',monospace; font-size:10px; font-weight:700; color:var(--ac); flex-shrink:0; }
+.card.active .card-icon { background:rgba(255,255,255,.08); border-color:var(--ac); }
+.card-info { flex:1; }
+.name-row { display:flex; align-items:center; gap:7px; margin-bottom:3px; }
+.card-name { font-family:'Orbitron','Courier New',monospace; font-size:12px; font-weight:700; color:var(--ac); letter-spacing:1px; cursor:pointer; border-bottom:1px dashed rgba(255,255,255,.1); }
+.badge { font-size:9px; padding:2px 7px; border-radius:20px; letter-spacing:1px; font-weight:700; text-transform:uppercase; }
+.b-on { background:rgba(34,197,94,.12); color:#22c55e; border:1px solid rgba(34,197,94,.25); }
+.b-off { background:rgba(80,80,122,.15); color:#50507a; border:1px solid #1c1c38; }
+.b-pause { background:rgba(245,158,11,.1); color:#f59e0b; border:1px solid rgba(245,158,11,.2); }
+.card-timer { font-family:'Orbitron','Courier New',monospace; font-size:27px; font-weight:900; letter-spacing:2px; color:#dde0ff; line-height:1; margin-bottom:3px; }
+.card.active .card-timer { color:var(--ac); }
+.card-earn { font-size:13px; color:#50507a; font-weight:600; }
+.card.active .card-earn { color:#22c55e; }
+.card-price-tag { font-size:10px; color:#50507a; margin-top:2px; }
+.card-btns { display:flex; gap:8px; padding:0 13px 13px; }
+.btn { flex:1; padding:12px 0; border-radius:10px; border:none; font-family:'Rajdhani','Roboto',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; cursor:pointer; transition:transform .12s; text-transform:uppercase; outline:none; }
+.btn:active { transform:scale(.95); }
+.btn-go { color:#000; background:var(--ac); }
+.btn-pause { background:rgba(245,158,11,.12); color:#f59e0b; border:1px solid rgba(245,158,11,.25); }
+.btn-stop { background:rgba(255,68,102,.1); color:#ff4466; border:1px solid rgba(255,68,102,.2); flex:0 0 46px; font-size:17px; }
+.btn-hist { background:rgba(255,255,255,.04); color:#50507a; border:1px solid #1c1c38; flex:0 0 46px; font-size:14px; }
 
 /* SUMMARY */
-.sum-wrap { padding: 13px; display: flex; flex-direction: column; gap: 10px; }
-.sum-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.sum-card {
-  background: #0f0f1e; border: 1px solid #1c1c38;
-  border-radius: 13px; padding: 14px; text-align: center;
-}
-.sum-card.full { grid-column: 1 / -1; }
-.sc-icon { font-size: 22px; margin-bottom: 6px; }
-.sc-val { font-family: 'Orbitron', 'Courier New', monospace; font-size: 15px; font-weight: 700; color: #dde0ff; margin-bottom: 3px; }
-.sc-lbl { font-size: 10px; color: #50507a; letter-spacing: 1px; text-transform: uppercase; }
-.sc-ps .sc-val { color: #00f0ff; }
-.sc-bill .sc-val { color: #22c55e; }
-.sc-tot .sc-val { color: #a855f7; font-size: 19px; }
+.sum-wrap { padding:13px; display:flex; flex-direction:column; gap:10px; }
+.sum-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.sum-card { background:#0f0f1e; border:1px solid #1c1c38; border-radius:13px; padding:14px; text-align:center; }
+.sum-card.full { grid-column:1/-1; }
+.sc-icon { font-size:22px; margin-bottom:6px; }
+.sc-val { font-family:'Orbitron','Courier New',monospace; font-size:15px; font-weight:700; color:#dde0ff; margin-bottom:3px; }
+.sc-lbl { font-size:10px; color:#50507a; letter-spacing:1px; text-transform:uppercase; }
+.sc-ps .sc-val { color:#00f0ff; }
+.sc-bill .sc-val { color:#22c55e; }
+.sc-tot .sc-val { color:#a855f7; font-size:19px; }
+.dev-list,.day-history { background:#0f0f1e; border:1px solid #1c1c38; border-radius:13px; padding:14px; }
+.dev-list-title,.day-history-title { font-family:'Orbitron','Courier New',monospace; font-size:10px; color:#50507a; letter-spacing:2px; margin-bottom:10px; }
+.dev-row,.day-item { display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid #1c1c38; }
+.dev-row:last-child,.day-item:last-child { border:none; }
+.dev-left { display:flex; align-items:center; gap:9px; }
+.dev-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.dev-name { font-size:13px; font-weight:600; }
+.dev-sub { font-size:10px; color:#50507a; }
+.dev-earn { font-family:'Orbitron','Courier New',monospace; font-size:13px; font-weight:700; color:#22c55e; }
+.day-date { font-size:12px; color:#dde0ff; }
+.day-earn { font-family:'Orbitron','Courier New',monospace; font-size:13px; font-weight:700; color:#a855f7; }
+.btn-end-day { width:100%; padding:14px; background:rgba(255,68,102,.08); border:1px solid rgba(255,68,102,.2); border-radius:12px; color:#ff4466; font-family:'Rajdhani','Roboto',sans-serif; font-size:14px; font-weight:700; letter-spacing:2px; cursor:pointer; text-transform:uppercase; }
 
-.dev-list { background: #0f0f1e; border: 1px solid #1c1c38; border-radius: 13px; padding: 14px; }
-.dev-list-title { font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; color: #50507a; letter-spacing: 2px; margin-bottom: 10px; }
-.dev-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #1c1c38; }
-.dev-row:last-child { border: none; }
-.dev-left { display: flex; align-items: center; gap: 9px; }
-.dev-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.dev-name { font-size: 13px; font-weight: 600; }
-.dev-sub { font-size: 10px; color: #50507a; }
-.dev-earn { font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; font-weight: 700; color: #22c55e; }
-
-.btn-end-day {
-  width: 100%; padding: 14px;
-  background: rgba(255,68,102,0.08); border: 1px solid rgba(255,68,102,0.2);
-  border-radius: 12px; color: #ff4466;
-  font-family: 'Rajdhani', 'Roboto', 'Noto Sans', sans-serif; font-size: 14px; font-weight: 700;
-  letter-spacing: 2px; cursor: pointer; text-transform: uppercase;
-}
-.btn-end-day:active { transform: scale(0.98); }
+/* SETTINGS */
+.settings-wrap { padding:13px; display:flex; flex-direction:column; gap:12px; }
+.set-card { background:#0f0f1e; border:1px solid #1c1c38; border-radius:13px; padding:16px; }
+.set-title { font-family:'Orbitron','Courier New',monospace; font-size:10px; color:#50507a; letter-spacing:2px; margin-bottom:12px; }
+.set-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid #1c1c38; gap:10px; }
+.set-row:last-child { border:none; }
+.set-label { font-size:13px; color:#dde0ff; flex:1; }
+.set-input { background:#07070f; border:1px solid #1c1c38; border-radius:7px; color:#dde0ff; font-family:'Orbitron','Courier New',monospace; font-size:12px; padding:6px 10px; width:100px; outline:none; text-align:center; }
+.set-input:focus { border-color:#a855f7; }
+.set-btn { background:rgba(168,85,247,.1); border:1px solid rgba(168,85,247,.25); border-radius:8px; color:#a855f7; padding:6px 12px; font-size:12px; cursor:pointer; white-space:nowrap; }
+.set-btn.danger { background:rgba(255,68,102,.1); border-color:rgba(255,68,102,.25); color:#ff4466; }
+.set-btn.success { background:rgba(34,197,94,.1); border-color:rgba(34,197,94,.25); color:#22c55e; }
+.set-btn.cyan { background:rgba(0,240,255,.1); border-color:rgba(0,240,255,.25); color:#00f0ff; }
+.full-btn { width:100%; padding:13px; border-radius:12px; font-family:'Rajdhani','Roboto',sans-serif; font-size:14px; font-weight:700; letter-spacing:2px; cursor:pointer; text-transform:uppercase; margin-top:6px; border:none; }
+.full-btn.cyan-btn { background:rgba(0,240,255,.08); border:1px solid rgba(0,240,255,.2); color:#00f0ff; }
+.full-btn.purple-btn { background:rgba(168,85,247,.08); border:1px solid rgba(168,85,247,.2); color:#a855f7; }
+.full-btn.red-btn { background:rgba(255,68,102,.08); border:1px solid rgba(255,68,102,.2); color:#ff4466; }
+.full-btn.green-btn { background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.2); color:#22c55e; }
 
 /* MODAL */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-  z-index: 200; display: flex; align-items: flex-end;
-  opacity: 0; pointer-events: none; transition: opacity 0.22s;
-}
-.modal-overlay.on { opacity: 1; pointer-events: all; }
-.modal {
-  background: #0f0f1e; border-radius: 20px 20px 0 0;
-  border-top: 1px solid #1c1c38; width: 100%;
-  max-height: 75vh; overflow-y: auto; padding: 18px 18px 40px;
-  transform: translateY(100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
-}
-.modal-overlay.on .modal { transform: translateY(0); }
-.modal-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.modal-title { font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px; font-weight: 700; }
-.modal-x { background: rgba(255,255,255,0.06); border: 1px solid #1c1c38; border-radius: 8px; color: #50507a; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
-.h-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1c1c38; }
-.h-item:last-of-type { border: none; }
-.h-date { font-size: 10px; color: #50507a; }
-.h-dur { font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px; }
-.h-earn { font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; font-weight: 700; color: #22c55e; }
-.no-hist { text-align: center; padding: 28px 0; color: #50507a; font-size: 13px; }
-.h-total { text-align: right; padding-top: 10px; font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px; color: #22c55e; border-top: 1px solid #1c1c38; margin-top: 4px; }
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:200; display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .22s; }
+.modal-overlay.on { opacity:1; pointer-events:all; }
+.modal { background:#0f0f1e; border-radius:20px 20px 0 0; border-top:1px solid #1c1c38; width:100%; max-height:80vh; overflow-y:auto; padding:18px 18px 40px; transform:translateY(100%); transition:transform .28s cubic-bezier(.4,0,.2,1); }
+.modal-overlay.on .modal { transform:translateY(0); }
+.modal-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.modal-title { font-family:'Orbitron','Courier New',monospace; font-size:12px; font-weight:700; }
+.modal-x { background:rgba(255,255,255,.06); border:1px solid #1c1c38; border-radius:8px; color:#50507a; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; }
+.m-input { width:100%; background:#07070f; border:1px solid #1c1c38; border-radius:10px; color:#dde0ff; font-family:'Orbitron','Courier New',monospace; font-size:14px; padding:12px 14px; outline:none; margin-bottom:12px; }
+.m-input:focus { border-color:#a855f7; }
+.m-label { font-size:11px; color:#50507a; letter-spacing:1px; margin-bottom:6px; display:block; }
+.h-item { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #1c1c38; }
+.h-item:last-of-type { border:none; }
+.h-date { font-size:10px; color:#50507a; }
+.h-dur { font-family:'Orbitron','Courier New',monospace; font-size:12px; }
+.h-earn { font-family:'Orbitron','Courier New',monospace; font-size:13px; font-weight:700; color:#22c55e; }
+.no-hist { text-align:center; padding:28px 0; color:#50507a; font-size:13px; }
+.h-total { text-align:right; padding-top:10px; font-family:'Orbitron','Courier New',monospace; font-size:12px; color:#22c55e; border-top:1px solid #1c1c38; margin-top:4px; }
 
 /* BOTTOM BAR */
-.bbar {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: rgba(7,7,15,0.97); border-top: 1px solid #1c1c38;
-  padding: 11px 18px 22px;
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  z-index: 50;
-}
-.bbar-dots { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; max-width: 90px; }
-.bdot { width: 9px; height: 9px; border-radius: 50%; background: #1c1c38; transition: background 0.3s, transform 0.2s; }
-.bdot.on { transform: scale(1.3); }
-@keyframes dpulse { 0%,100%{opacity:1}50%{opacity:0.35} }
-.bdot.on { animation: dpulse 1.6s ease-in-out infinite; }
-.bbar-mid { flex: 1; text-align: center; }
-.bbar-lbl { font-size: 9px; color: #50507a; letter-spacing: 1px; }
-.bbar-val { font-family: 'Orbitron', 'Courier New', monospace; font-size: 15px; color: #22c55e; font-weight: 700; }
-.btn-report {
-  background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.25);
-  border-radius: 9px; color: #a855f7;
-  font-family: 'Rajdhani', 'Roboto', 'Noto Sans', sans-serif; font-size: 11px; font-weight: 700;
-  letter-spacing: 1px; padding: 8px 12px; cursor: pointer; text-transform: uppercase;
-}
+.bbar { position:fixed; bottom:0; left:0; right:0; background:rgba(7,7,15,.97); border-top:1px solid #1c1c38; padding:11px 18px 22px; display:flex; align-items:center; justify-content:space-between; gap:10px; z-index:50; }
+.bbar-dots { display:flex; gap:6px; align-items:center; flex-wrap:wrap; max-width:90px; }
+.bdot { width:9px; height:9px; border-radius:50%; background:#1c1c38; transition:background .3s,transform .2s; }
+@keyframes dpulse { 0%,100%{opacity:1}50%{opacity:.35} }
+.bdot.on { transform:scale(1.3); animation:dpulse 1.6s ease-in-out infinite; }
+.bbar-mid { flex:1; text-align:center; }
+.bbar-lbl { font-size:9px; color:#50507a; letter-spacing:1px; }
+.bbar-val { font-family:'Orbitron','Courier New',monospace; font-size:15px; color:#22c55e; font-weight:700; }
+.btn-report { background:rgba(168,85,247,.12); border:1px solid rgba(168,85,247,.25); border-radius:9px; color:#a855f7; font-family:'Rajdhani','Roboto',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; padding:8px 12px; cursor:pointer; text-transform:uppercase; }
+
+/* TOAST */
+.toast { position:fixed; top:70px; left:50%; transform:translateX(-50%); background:#1c1c38; border:1px solid #a855f7; color:#dde0ff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:20px; z-index:9999; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap; }
+.toast.show { opacity:1; }
 </style>
 </head>
 <body>
-<div class="app">
 
+<!-- LOCK SCREEN -->
+<div id="lockScreen" class="lock-screen">
+  <div class="lock-logo">GAMECLUB</div>
+  <div class="lock-sub">BOSHQARUV MARKAZI</div>
+  <div class="lock-icon" id="lockIcon">🔐</div>
+  <div class="lock-title" id="lockTitle">PAROL KIRITING</div>
+  <div id="lockSetupInfo" class="lock-setup-info" style="display:none">
+    <p>Bu qurilmada ilova birinchi marta ishga tushmoqda.<br><b>Faollashtirish kodini</b> kiriting.<br><br>Kodni faqat <b>ilova egasi</b> berishi mumkin.</p>
+  </div>
+  <input class="lock-input" id="lockInput" type="password" placeholder="••••••••" autocomplete="off">
+  <button class="lock-btn" onclick="checkPassword()">KIRISH →</button>
+  <div class="lock-err" id="lockErr"></div>
+  <div class="lock-attempts" id="lockAttempts"></div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none">
+<div class="app">
   <header>
     <div class="logo">GAMECLUB<span class="logo-sub">BOSHQARUV MARKAZI</span></div>
     <div>
@@ -252,9 +190,10 @@ header {
   </header>
 
   <div class="tabs">
-    <button class="tab-btn on" id="t-ps"   onclick="goTab('ps')">🎮 PlayStation</button>
+    <button class="tab-btn on" id="t-ps"   onclick="goTab('ps')">🎮 PS</button>
     <button class="tab-btn"   id="t-bill"  onclick="goTab('bill')">🎱 Billiard</button>
     <button class="tab-btn"   id="t-sum"   onclick="goTab('sum')">📊 Hisobot</button>
+    <button class="tab-btn"   id="t-set"   onclick="goTab('set')">⚙️ Sozlama</button>
   </div>
 
   <!-- PS -->
@@ -265,6 +204,9 @@ header {
       <span>so'm/soat</span>
     </div>
     <div class="cards" id="cards-ps"></div>
+    <div style="padding:0 13px">
+      <button class="full-btn green-btn" onclick="addDevice('ps')">＋ PS Qo'shish</button>
+    </div>
   </div>
 
   <!-- BILLIARD -->
@@ -275,36 +217,70 @@ header {
       <span>so'm/soat</span>
     </div>
     <div class="cards" id="cards-bill"></div>
+    <div style="padding:0 13px">
+      <button class="full-btn green-btn" onclick="addDevice('bill')">＋ Stol Qo'shish</button>
+    </div>
   </div>
 
   <!-- SUMMARY -->
   <div class="sec" id="sec-sum">
     <div class="sum-wrap">
       <div class="sum-grid">
-        <div class="sum-card sc-ps">
-          <div class="sc-icon">🎮</div>
-          <div class="sc-val" id="sm-ps">0</div>
-          <div class="sc-lbl">PlayStation</div>
-        </div>
-        <div class="sum-card sc-bill">
-          <div class="sc-icon">🎱</div>
-          <div class="sc-val" id="sm-bill">0</div>
-          <div class="sc-lbl">Billiard</div>
-        </div>
-        <div class="sum-card sc-tot full">
-          <div class="sc-icon">💰</div>
-          <div class="sc-val" id="sm-tot">0 so'm</div>
-          <div class="sc-lbl">Jami bugungi daromad</div>
-        </div>
+        <div class="sum-card sc-ps"><div class="sc-icon">🎮</div><div class="sc-val" id="sm-ps">0</div><div class="sc-lbl">PlayStation</div></div>
+        <div class="sum-card sc-bill"><div class="sc-icon">🎱</div><div class="sc-val" id="sm-bill">0</div><div class="sc-lbl">Billiard</div></div>
+        <div class="sum-card sc-tot full"><div class="sc-icon">💰</div><div class="sc-val" id="sm-tot">0 so'm</div><div class="sc-lbl">Jami bugungi daromad</div></div>
       </div>
       <div class="dev-list">
         <div class="dev-list-title">QURILMALAR HOLATI</div>
         <div id="sm-devs"></div>
       </div>
-      <button class="btn-end-day" onclick="endDay()">🏁 Kunni Yakunla</button>
+      <div class="day-history">
+        <div class="day-history-title">KUNLIK TARIX</div>
+        <div id="day-history-list"><div class="no-hist">Hali kun yakunlanmagan</div></div>
+      </div>
+      <button class="full-btn green-btn" onclick="exportCSV()" style="margin-top:4px">📊 CSV Hisobot Yuklab Olish</button>
+      <button class="btn-end-day" onclick="endDay()" style="margin-top:8px">🏁 Kunni Yakunla</button>
     </div>
   </div>
 
+  <!-- SOZLAMALAR -->
+  <div class="sec" id="sec-set">
+    <div class="settings-wrap">
+
+      <div class="set-card">
+        <div class="set-title">QURILMALAR</div>
+        <div id="rename-list"></div>
+      </div>
+
+      <div class="set-card">
+        <div class="set-title">PAROL SOZLAMALARI</div>
+        <div class="set-row">
+          <span class="set-label">Parolni o'zgartirish</span>
+          <button class="set-btn" onclick="openChangePass()">🔑 O'zgartir</button>
+        </div>
+        <div class="set-row">
+          <span class="set-label">Qulfni yoqish/o'chirish</span>
+          <button class="set-btn" id="lockToggleBtn" onclick="toggleLockEnabled()">⚙️</button>
+        </div>
+      </div>
+
+      <div class="set-card">
+        <div class="set-title">MA'LUMOTLAR</div>
+        <button class="full-btn cyan-btn" onclick="exportData()">📤 Zaxira olish (JSON)</button>
+        <button class="full-btn purple-btn" onclick="document.getElementById('importFile').click()">📥 Zaxiradan tiklash</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="full-btn green-btn" onclick="exportCSV()">📊 CSV Hisobot</button>
+      </div>
+
+      <div class="set-card">
+        <div class="set-title">MA'LUMOT</div>
+        <div class="set-row"><span class="set-label">Versiya</span><span style="color:#50507a;font-size:12px">v3.0</span></div>
+        <div class="set-row"><span class="set-label">Saqlash holati</span><span id="save-status" style="color:#22c55e;font-size:12px">✅ Saqlangan</span></div>
+        <div class="set-row"><span class="set-label">Qurilma ID</span><span id="device-id-show" style="color:#50507a;font-size:10px;font-family:monospace"></span></div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <!-- BOTTOM BAR -->
@@ -316,287 +292,622 @@ header {
   </div>
   <button class="btn-report" onclick="goTab('sum')">📊 Hisobot</button>
 </div>
+</div><!-- /mainApp -->
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal" onclick="modalBgClick(event)">
+<!-- HISTORY MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target.id==='modal')closeModal()">
   <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title" id="modal-title">Tarix</div>
-      <div class="modal-x" onclick="closeModal()">✕</div>
-    </div>
+    <div class="modal-hdr"><div class="modal-title" id="modal-title">Tarix</div><div class="modal-x" onclick="closeModal()">✕</div></div>
     <div id="modal-body"></div>
   </div>
 </div>
 
+<!-- RENAME MODAL -->
+<div class="modal-overlay" id="renameModal" onclick="if(event.target.id==='renameModal')closeRenameModal()">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">✏️ Nom o'zgartirish</div><div class="modal-x" onclick="closeRenameModal()">✕</div></div>
+    <span class="m-label">Yangi nom:</span>
+    <input class="m-input" id="renameInput" type="text" placeholder="Nom kiriting...">
+    <button class="full-btn purple-btn" onclick="confirmRename()">✅ Saqlash</button>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal-overlay" id="changePassModal" onclick="if(event.target.id==='changePassModal')closeChangePass()">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">🔑 Parol O'zgartirish</div><div class="modal-x" onclick="closeChangePass()">✕</div></div>
+    <span class="m-label">Joriy parol:</span>
+    <input class="m-input" id="oldPassInput" type="password" placeholder="Joriy parol...">
+    <span class="m-label">Yangi parol (kamida 4 belgi):</span>
+    <input class="m-input" id="newPassInput" type="password" placeholder="Yangi parol...">
+    <span class="m-label">Yangi parolni takrorlang:</span>
+    <input class="m-input" id="newPassInput2" type="password" placeholder="Takrorlang...">
+    <div class="lock-err" id="changePassErr"></div>
+    <button class="full-btn purple-btn" onclick="confirmChangePass()">✅ O'zgartirish</button>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal" onclick="if(event.target.id==='deleteModal')cancelDelete()">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">Tasdiqlash</div><div class="modal-x" onclick="cancelDelete()">✕</div></div>
+    <div id="deleteMsg" style="font-size:14px;color:#dde0ff;margin-bottom:20px;line-height:1.6;"></div>
+    <div style="display:flex;gap:10px;">
+      <button class="full-btn red-btn" style="margin-top:0" onclick="confirmDelete()">🗑️ Ha, O'chir</button>
+      <button class="full-btn purple-btn" style="margin-top:0" onclick="cancelDelete()">Bekor</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
-// ── STATE ──
-var psPrice   = 15000;
-var billPrice = 40000;
-var curTab    = 'ps';
+// ═══════════════════════════════════════
+// SECURITY MODULE (shifrlangan)
+// ═══════════════════════════════════════
+var _gc = (function(){
+  // SHA-256 oddiy implementatsiya
+  function _h(s){
+    function rr(v,n){return((v>>>n)|(v<<(32-n)))>>>0;}
+    var K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+    var H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+    var b=[];for(var i=0;i<s.length;i++)b.push(s.charCodeAt(i));
+    b.push(0x80);while((b.length+8)%64!==0)b.push(0);
+    var l=s.length*8;b.push(0,0,0,0,(l>>>24)&0xff,(l>>>16)&0xff,(l>>>8)&0xff,l&0xff);
+    for(var c=0;c<b.length;c+=64){
+      var w=[];for(var j=0;j<16;j++)w[j]=(b[c+j*4]<<24)|(b[c+j*4+1]<<16)|(b[c+j*4+2]<<8)|b[c+j*4+3];
+      for(var j=16;j<64;j++){var s0=(rr(w[j-15],7)^rr(w[j-15],18)^(w[j-15]>>>3))>>>0;var s1=(rr(w[j-2],17)^rr(w[j-2],19)^(w[j-2]>>>10))>>>0;w[j]=(w[j-16]+s0+w[j-7]+s1)>>>0;}
+      var a=H[0],b2=H[1],cc=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+      for(var j=0;j<64;j++){var S1=(rr(e,6)^rr(e,11)^rr(e,25))>>>0;var ch=((e&f)^(~e&g))>>>0;var T1=(h+S1+ch+K[j]+w[j])>>>0;var S0=(rr(a,2)^rr(a,13)^rr(a,22))>>>0;var maj=((a&b2)^(a&cc)^(b2&cc))>>>0;var T2=(S0+maj)>>>0;h=g;g=f;f=e;e=(d+T1)>>>0;d=cc;cc=b2;b2=a;a=(T1+T2)>>>0;}
+      H[0]=(H[0]+a)>>>0;H[1]=(H[1]+b2)>>>0;H[2]=(H[2]+cc)>>>0;H[3]=(H[3]+d)>>>0;H[4]=(H[4]+e)>>>0;H[5]=(H[5]+f)>>>0;H[6]=(H[6]+g)>>>0;H[7]=(H[7]+h)>>>0;
+    }
+    return H.map(function(x){return('00000000'+x.toString(16)).slice(-8);}).join('');
+  }
 
-var PS_COLORS   = ['#00f0ff','#ff4466','#a855f7','#ffaa00'];
-var BILL_COLORS = ['#22c55e','#f59e0b'];
+  // Qurilma uchun noyob ID (brauzer + ekran + til kombinatsiyasi)
+  function _did(){
+    var raw=[navigator.userAgent||'',screen.width||0,screen.height||0,navigator.language||'',navigator.platform||''].join('|');
+    return _h(raw).substring(0,16);
+  }
 
-var psDevs = [
-  {id:'p0',name:'PS-1',color:'#00f0ff',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null},
-  {id:'p1',name:'PS-2',color:'#ff4466',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null},
-  {id:'p2',name:'PS-3',color:'#a855f7',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null},
-  {id:'p3',name:'PS-4',color:'#ffaa00',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null}
+  // Parolni shifrlash: parol + deviceID + "GC_SALT_2024"
+  function _enc(pass){
+    var did=_did();
+    return _h(pass+'::'+did+'::GC_SALT_2024_GAMECLUB');
+  }
+
+  // Faqat parol (qurilmasiz) — zaxira uchun
+  function _encSimple(pass){
+    return _h(pass+'::GC_SALT_2024_GAMECLUB');
+  }
+
+  return { hash:_h, deviceId:_did, encrypt:_enc, encSimple:_encSimple };
+})();
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+var psPrice=15000, billPrice=40000, curTab='ps';
+var renameDevId=null, dayHistory=[], lockEnabled=true;
+var failedAttempts=0, maxAttempts=5, lockUntil=0;
+
+var psDevs=[
+  {id:'p0',name:'PS-1',color:'#00f0ff',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null,sessionPrice:15000},
+  {id:'p1',name:'PS-2',color:'#ff4466',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null,sessionPrice:15000},
+  {id:'p2',name:'PS-3',color:'#a855f7',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null,sessionPrice:15000},
+  {id:'p3',name:'PS-4',color:'#ffaa00',type:'ps',running:false,paused:false,secs:0,sessions:[],startTime:null,sessionPrice:15000}
 ];
-var billDevs = [
-  {id:'b0',name:'Stol-1',color:'#22c55e',type:'bill',running:false,paused:false,secs:0,sessions:[],startTime:null},
-  {id:'b1',name:'Stol-2',color:'#f59e0b',type:'bill',running:false,paused:false,secs:0,sessions:[],startTime:null}
+var billDevs=[
+  {id:'b0',name:'Stol-1',color:'#22c55e',type:'bill',running:false,paused:false,secs:0,sessions:[],startTime:null,sessionPrice:40000},
+  {id:'b1',name:'Stol-2',color:'#f59e0b',type:'bill',running:false,paused:false,secs:0,sessions:[],startTime:null,sessionPrice:40000}
 ];
 
-function allDevs() { return psDevs.concat(billDevs); }
+function allDevs(){return psDevs.concat(billDevs);}
+function findDev(id){return allDevs().find(function(d){return d.id===id;});}
 
-function findDev(id) {
-  return allDevs().find(function(d){ return d.id === id; });
+// ═══════════════════════════════════════
+// LOCK SYSTEM
+// ═══════════════════════════════════════
+function initLock(){
+  var stored=localStorage.getItem('gc_pass_hash');
+  var did=_gc.deviceId();
+  document.getElementById('device-id-show').textContent=did;
+
+  var le=localStorage.getItem('gc_lock_enabled');
+  lockEnabled = le===null ? true : le==='1';
+
+  if(!lockEnabled){
+    unlock(); return;
+  }
+
+  if(!stored){
+    // Birinchi marta — setup rejimi
+    document.getElementById('lockTitle').textContent='FAOLLASHTIRISH KODI';
+    document.getElementById('lockSetupInfo').style.display='block';
+    document.getElementById('lockIcon').textContent='🔑';
+  }
+
+  // Bloklash tekshiruv
+  checkLockTimer();
 }
 
-// ── UTILS ──
-function fmt(s) {
-  var h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sc = s%60;
-  return pad(h)+':'+pad(m)+':'+pad(sc);
+function checkLockTimer(){
+  var lu=parseInt(localStorage.getItem('gc_lock_until')||'0');
+  var fa=parseInt(localStorage.getItem('gc_failed_attempts')||'0');
+  failedAttempts=fa;
+  if(lu>Date.now()){
+    var sec=Math.ceil((lu-Date.now())/1000);
+    document.getElementById('lockErr').textContent='Juda ko\'p urinish!';
+    document.getElementById('lockAttempts').textContent=sec+' soniyadan keyin urinib ko\'ring';
+    document.getElementById('lockInput').disabled=true;
+    setTimeout(checkLockTimer,1000);
+  } else {
+    localStorage.setItem('gc_lock_until','0');
+    document.getElementById('lockInput').disabled=false;
+    document.getElementById('lockAttempts').textContent=fa>0?'Qolgan urinish: '+(maxAttempts-fa):'';
+  }
 }
+
+function checkPassword(){
+  var lu=parseInt(localStorage.getItem('gc_lock_until')||'0');
+  if(lu>Date.now()) return;
+
+  var input=document.getElementById('lockInput').value.trim();
+  if(!input){ document.getElementById('lockErr').textContent='Parol kiriting!'; return; }
+
+  var stored=localStorage.getItem('gc_pass_hash');
+
+  if(!stored){
+    // Setup — yangi parol o'rnatish
+    if(input.length<4){ document.getElementById('lockErr').textContent='Kamida 4 belgi bo\'lsin!'; return; }
+    var h=_gc.encrypt(input);
+    localStorage.setItem('gc_pass_hash',h);
+    localStorage.setItem('gc_failed_attempts','0');
+    unlock();
+    return;
+  }
+
+  // Parol tekshirish
+  var h=_gc.encrypt(input);
+  if(h===stored){
+    localStorage.setItem('gc_failed_attempts','0');
+    localStorage.setItem('gc_lock_until','0');
+    unlock();
+  } else {
+    failedAttempts++;
+    localStorage.setItem('gc_failed_attempts',String(failedAttempts));
+    var remaining=maxAttempts-failedAttempts;
+    if(remaining<=0){
+      var until=Date.now()+5*60*1000; // 5 daqiqa blok
+      localStorage.setItem('gc_lock_until',String(until));
+      failedAttempts=0;
+      localStorage.setItem('gc_failed_attempts','0');
+      document.getElementById('lockErr').textContent='5 daqiqa blok!';
+      checkLockTimer();
+    } else {
+      document.getElementById('lockErr').textContent='❌ Noto\'g\'ri parol!';
+      document.getElementById('lockAttempts').textContent='Qolgan urinish: '+remaining;
+    }
+    document.getElementById('lockInput').value='';
+    // Titratish effekti
+    var inp=document.getElementById('lockInput');
+    inp.style.borderColor='#ff4466';
+    setTimeout(function(){inp.style.borderColor='';},600);
+  }
+}
+
+function unlock(){
+  document.getElementById('lockScreen').style.display='none';
+  document.getElementById('mainApp').style.display='block';
+  loadData();
+  checkMidnight();
+  renderAll();
+}
+
+// Enter tugmasi
+document.getElementById('lockInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter') checkPassword();
+});
+
+// ═══════════════════════════════════════
+// CHANGE PASSWORD
+// ═══════════════════════════════════════
+function openChangePass(){
+  document.getElementById('oldPassInput').value='';
+  document.getElementById('newPassInput').value='';
+  document.getElementById('newPassInput2').value='';
+  document.getElementById('changePassErr').textContent='';
+  document.getElementById('changePassModal').className='modal-overlay on';
+}
+function closeChangePass(){ document.getElementById('changePassModal').className='modal-overlay'; }
+
+function confirmChangePass(){
+  var old=document.getElementById('oldPassInput').value.trim();
+  var n1=document.getElementById('newPassInput').value.trim();
+  var n2=document.getElementById('newPassInput2').value.trim();
+  var err=document.getElementById('changePassErr');
+
+  var stored=localStorage.getItem('gc_pass_hash');
+  if(stored && _gc.encrypt(old)!==stored){
+    err.textContent='❌ Joriy parol noto\'g\'ri!'; return;
+  }
+  if(n1.length<4){ err.textContent='❌ Kamida 4 belgi!'; return; }
+  if(n1!==n2){ err.textContent='❌ Parollar mos emas!'; return; }
+
+  localStorage.setItem('gc_pass_hash',_gc.encrypt(n1));
+  closeChangePass();
+  showToast('✅ Parol o\'zgartirildi!');
+}
+
+function toggleLockEnabled(){
+  lockEnabled=!lockEnabled;
+  localStorage.setItem('gc_lock_enabled',lockEnabled?'1':'0');
+  document.getElementById('lockToggleBtn').textContent=lockEnabled?'🔒 Yoqilgan':'🔓 O\'chirilgan';
+  showToast(lockEnabled?'🔒 Qulf yoqildi':'🔓 Qulf o\'chirildi');
+}
+
+function updateLockToggleBtn(){
+  var btn=document.getElementById('lockToggleBtn');
+  if(btn) btn.textContent=lockEnabled?'🔒 Yoqilgan':'🔓 O\'chirilgan';
+}
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function fmt(s){ var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60; return pad(h)+':'+pad(m)+':'+pad(sc); }
 function pad(n){ return String(n).padStart(2,'0'); }
-function priceOf(type){ return type==='ps' ? psPrice : billPrice; }
-function earnNow(d){ return Math.round((d.secs/3600)*priceOf(d.type)); }
-function devTotal(d){ return d.sessions.reduce(function(a,b){return a+b.earned;},0) + earnNow(d); }
+function priceOf(t){ return t==='ps'?psPrice:billPrice; }
+function earnNow(d){ return Math.round((d.secs/3600)*(d.sessionPrice||priceOf(d.type))); }
+function devTotal(d){ return d.sessions.reduce(function(a,b){return a+b.earned;},0)+earnNow(d); }
 function groupTotal(devs){ return devs.reduce(function(a,d){return a+devTotal(d);},0); }
 function grandTotal(){ return groupTotal(psDevs)+groupTotal(billDevs); }
 
-// ── TABS ──
-function goTab(tab) {
-  curTab = tab;
-  ['ps','bill','sum'].forEach(function(t){
-    document.getElementById('sec-'+t).className  = 'sec' + (t===tab?' on':'');
-    document.getElementById('t-'+t).className    = 'tab-btn' + (t===tab?' on':'');
-  });
-  if(tab==='sum') refreshSummary();
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
 }
 
-// ── RENDER GROUP ──
-function renderGroup(devs, containerId) {
-  var el = document.getElementById(containerId);
-  el.innerHTML = '';
-  devs.forEach(function(d) {
-    var div = document.createElement('div');
-    div.className = 'card' + (d.running?' active':'');
-    div.style.setProperty('--ac', d.color);
+// ═══════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════
+function goTab(tab){
+  curTab=tab;
+  ['ps','bill','sum','set'].forEach(function(t){
+    document.getElementById('sec-'+t).className='sec'+(t===tab?' on':'');
+    document.getElementById('t-'+t).className='tab-btn'+(t===tab?' on':'');
+  });
+  if(tab==='sum') refreshSummary();
+  if(tab==='set'){ refreshRenameList(); updateLockToggleBtn(); }
+}
 
-    var badge = d.running
-      ? '<span class="badge b-on">● Faol</span>'
-      : d.paused
-      ? '<span class="badge b-pause">⏸ Pauza</span>'
-      : '<span class="badge b-off">○ Bosh</span>';
+// ═══════════════════════════════════════
+// ADD / REMOVE DEVICE
+// ═══════════════════════════════════════
+function addDevice(type){
+  var devs=type==='ps'?psDevs:billDevs;
+  var n=devs.length+1;
+  var colors=['#00f0ff','#ff4466','#a855f7','#ffaa00','#22c55e','#f59e0b','#ec4899','#06b6d4'];
+  var col=colors[(devs.length)%colors.length];
+  var prefix=type==='ps'?'PS-':'Stol-';
+  var id=(type==='ps'?'p':'b')+'_'+Date.now();
+  devs.push({id:id,name:prefix+n,color:col,type:type,running:false,paused:false,secs:0,sessions:[],startTime:null,sessionPrice:priceOf(type)});
+  renderAll(); saveData();
+  showToast('✅ '+prefix+n+' qo\'shildi!');
+}
 
-    var earnTxt = (d.running||d.paused||d.secs>0)
-      ? earnNow(d).toLocaleString('uz-UZ')+' soʻm' : 'Tayyor';
+var _deleteId=null;
+function removeDevice(id){
+  var d=findDev(id);
+  if(!d) return;
+  _deleteId=id;
+  var msg=d.running||d.paused
+    ? '⚠️ '+d.name+' sessiyasi ochiq!\nBaribir o\'chirasizmi?'
+    : '🗑️ '+d.name+' ni o\'chirish?';
+  document.getElementById('deleteMsg').textContent=msg;
+  document.getElementById('deleteModal').className='modal-overlay on';
+}
+function confirmDelete(){
+  document.getElementById('deleteModal').className='modal-overlay';
+  if(!_deleteId) return;
+  var d=findDev(_deleteId);
+  var name=d?d.name:'';
+  if(d){
+    if(d.type==='ps') psDevs=psDevs.filter(function(x){return x.id!==_deleteId;});
+    else billDevs=billDevs.filter(function(x){return x.id!==_deleteId;});
+  }
+  _deleteId=null;
+  renderAll(); saveData(); refreshRenameList();
+  showToast('🗑️ '+name+' o\'chirildi');
+}
+function cancelDelete(){
+  document.getElementById('deleteModal').className='modal-overlay';
+  _deleteId=null;
+}
 
-    var icon = d.type==='ps' ? d.name : '🎱';
-
-    var btns = '';
-    if(!d.running && !d.paused){
-      btns += '<button class="btn btn-go" onclick="startDev(\''+d.id+'\')">▶ Boshlash</button>';
-    } else if(d.running){
-      btns += '<button class="btn btn-pause" onclick="pauseDev(\''+d.id+'\')">⏸ Pauza</button>';
-    } else {
-      btns += '<button class="btn btn-go" onclick="resumeDev(\''+d.id+'\')">▶ Davom</button>';
-    }
-    if(d.running||d.paused||d.secs>0){
-      btns += '<button class="btn btn-stop" onclick="stopDev(\''+d.id+'\')" title="Yakunla">⏹</button>';
-    }
-    if(d.sessions.length>0){
-      btns += '<button class="btn btn-hist" onclick="openHist(\''+d.id+'\')" title="Tarix">📋</button>';
-    }
-
-    div.innerHTML =
-      '<div class="card-top">' +
-        '<div class="card-icon">'+icon+'</div>' +
-        '<div class="card-info">' +
-          '<div class="name-row"><span class="card-name">'+d.name+'</span>'+badge+'</div>' +
-          '<div class="card-timer" id="tm-'+d.id+'">'+fmt(d.secs)+'</div>' +
-          '<div class="card-earn" id="en-'+d.id+'">'+earnTxt+'</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="card-btns">'+btns+'</div>';
-
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function renderGroup(devs,cId){
+  var el=document.getElementById(cId);
+  el.innerHTML='';
+  devs.forEach(function(d){
+    var div=document.createElement('div');
+    div.className='card'+(d.running?' active':'');
+    div.style.setProperty('--ac',d.color);
+    var badge=d.running?'<span class="badge b-on">● Faol</span>':d.paused?'<span class="badge b-pause">⏸ Pauza</span>':'<span class="badge b-off">○ Bosh</span>';
+    var earnTxt=(d.running||d.paused||d.secs>0)?earnNow(d).toLocaleString('uz-UZ')+' soʻm':'Tayyor';
+    var icon=d.type==='ps'?d.name:'🎱';
+    var priceTag=(d.running||d.paused)?'<div class="card-price-tag">'+((d.sessionPrice||priceOf(d.type)).toLocaleString())+' soʻm/soat</div>':'';
+    var btns='';
+    if(!d.running&&!d.paused) btns+='<button class="btn btn-go" onclick="startDev(\''+d.id+'\')">▶ Boshlash</button>';
+    else if(d.running) btns+='<button class="btn btn-pause" onclick="pauseDev(\''+d.id+'\')">⏸ Pauza</button>';
+    else btns+='<button class="btn btn-go" onclick="resumeDev(\''+d.id+'\')">▶ Davom</button>';
+    if(d.running||d.paused||d.secs>0) btns+='<button class="btn btn-stop" onclick="stopDev(\''+d.id+'\')" title="Yakunla">⏹</button>';
+    if(d.sessions.length>0) btns+='<button class="btn btn-hist" onclick="openHist(\''+d.id+'\')" title="Tarix">📋</button>';
+    div.innerHTML='<div class="card-top"><div class="card-icon">'+icon+'</div><div class="card-info"><div class="name-row"><span class="card-name" onclick="openRename(\''+d.id+'\')">'+d.name+'</span>'+badge+'</div><div class="card-timer" id="tm-'+d.id+'">'+fmt(d.secs)+'</div><div class="card-earn" id="en-'+d.id+'">'+earnTxt+'</div>'+priceTag+'</div></div><div class="card-btns">'+btns+'</div>';
     el.appendChild(div);
   });
 }
 
-function renderAll() {
-  renderGroup(psDevs,   'cards-ps');
-  renderGroup(billDevs, 'cards-bill');
-  refreshMeta();
-}
+function renderAll(){ renderGroup(psDevs,'cards-ps'); renderGroup(billDevs,'cards-bill'); refreshMeta(); }
 
-// ── META ──
-function refreshMeta() {
-  var tot = grandTotal();
-  document.getElementById('hdrTotal').textContent  = tot.toLocaleString()+' soʻm';
-  document.getElementById('bbar-val').textContent  = tot.toLocaleString()+' soʻm';
-
-  var dotsEl = document.getElementById('bbar-dots');
-  dotsEl.innerHTML = '';
+function refreshMeta(){
+  var tot=grandTotal();
+  document.getElementById('hdrTotal').textContent=tot.toLocaleString()+' soʻm';
+  document.getElementById('bbar-val').textContent=tot.toLocaleString()+' soʻm';
+  var dotsEl=document.getElementById('bbar-dots');
+  dotsEl.innerHTML='';
   allDevs().forEach(function(d){
-    var dot = document.createElement('div');
-    dot.className = 'bdot'+(d.running?' on':'');
-    if(d.running) dot.style.background = d.color;
+    var dot=document.createElement('div');
+    dot.className='bdot'+(d.running?' on':'');
+    if(d.running) dot.style.background=d.color;
     dotsEl.appendChild(dot);
   });
 }
 
-// ── SUMMARY ──
-function refreshSummary() {
-  var psE   = groupTotal(psDevs);
-  var billE = groupTotal(billDevs);
-  var tot   = psE+billE;
-  document.getElementById('sm-ps').textContent   = psE   > 0 ? psE.toLocaleString()+' soʻm'   : '0';
-  document.getElementById('sm-bill').textContent = billE > 0 ? billE.toLocaleString()+' soʻm' : '0';
-  document.getElementById('sm-tot').textContent  = tot   > 0 ? tot.toLocaleString()+' soʻm'   : '0 soʻm';
-
-  var html = '';
+function refreshSummary(){
+  var psE=groupTotal(psDevs),billE=groupTotal(billDevs),tot=psE+billE;
+  document.getElementById('sm-ps').textContent=psE>0?psE.toLocaleString()+' soʻm':'0';
+  document.getElementById('sm-bill').textContent=billE>0?billE.toLocaleString()+' soʻm':'0';
+  document.getElementById('sm-tot').textContent=tot>0?tot.toLocaleString()+' soʻm':'0 soʻm';
+  var html='';
   allDevs().forEach(function(d){
-    var e = devTotal(d);
-    var status = d.running ? '● Faol' : d.paused ? '⏸ Pauza' : '○ Bosh';
-    var icon = d.type==='ps' ? '🎮' : '🎱';
-    html += '<div class="dev-row">' +
-      '<div class="dev-left">' +
-        '<div class="dev-dot" style="background:'+d.color+(d.running?';animation:dpulse 1.5s infinite':'')+'"></div>' +
-        '<div><div class="dev-name">'+icon+' '+d.name+'</div><div class="dev-sub">'+status+' · '+fmt(d.secs)+'</div></div>' +
-      '</div>' +
-      '<div class="dev-earn">'+(e>0?e.toLocaleString()+' soʻm':'—')+'</div>' +
-    '</div>';
+    var e=devTotal(d);
+    var status=d.running?'● Faol':d.paused?'⏸ Pauza':'○ Bosh';
+    html+='<div class="dev-row"><div class="dev-left"><div class="dev-dot" style="background:'+d.color+(d.running?';animation:dpulse 1.5s infinite':'')+'"></div><div><div class="dev-name">'+(d.type==='ps'?'🎮':'🎱')+' '+d.name+'</div><div class="dev-sub">'+status+' · '+fmt(d.secs)+'</div></div></div><div class="dev-earn">'+(e>0?e.toLocaleString()+' soʻm':'—')+'</div></div>';
   });
-  document.getElementById('sm-devs').innerHTML = html;
+  document.getElementById('sm-devs').innerHTML=html;
+  var dhtml='';
+  if(!dayHistory.length) dhtml='<div class="no-hist">Hali kun yakunlanmagan</div>';
+  else dayHistory.forEach(function(day){ dhtml+='<div class="day-item"><div><div class="day-date">📅 '+day.date+'</div><div style="font-size:10px;color:#50507a">🎮 '+day.ps.toLocaleString()+' · 🎱 '+day.bill.toLocaleString()+'</div></div><div class="day-earn">'+day.total.toLocaleString()+' soʻm</div></div>'; });
+  document.getElementById('day-history-list').innerHTML=dhtml;
 }
 
-// ── ACTIONS ──
-function startDev(id)  {
+// ═══════════════════════════════════════
+// RENAME
+// ═══════════════════════════════════════
+function refreshRenameList(){
+  var html='';
+  allDevs().forEach(function(d){
+    html+='<div class="set-row"><span class="set-label">'+(d.type==='ps'?'🎮':'🎱')+' '+d.name+'</span><div style="display:flex;gap:6px"><button class="set-btn" onclick="openRename(\''+d.id+'\')">✏️</button><button class="set-btn danger" onclick="removeDevice(\''+d.id+'\')">🗑️</button></div></div>';
+  });
+  document.getElementById('rename-list').innerHTML=html||'<div class="no-hist">Qurilma yo\'q</div>';
+}
+
+function openRename(id){
+  renameDevId=id;
+  document.getElementById('renameInput').value=findDev(id).name;
+  document.getElementById('renameModal').className='modal-overlay on';
+  setTimeout(function(){document.getElementById('renameInput').focus();},300);
+}
+function closeRenameModal(){ document.getElementById('renameModal').className='modal-overlay'; renameDevId=null; }
+function confirmRename(){
+  if(!renameDevId) return;
+  var n=document.getElementById('renameInput').value.trim();
+  if(!n) return;
+  findDev(renameDevId).name=n;
+  closeRenameModal(); renderAll(); saveData();
+  showToast('✅ Nom o\'zgartirildi: '+n);
+}
+document.getElementById('renameInput').addEventListener('keydown',function(e){ if(e.key==='Enter') confirmRename(); });
+
+// ═══════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════
+function startDev(id){
   var d=findDev(id);
   d.running=true; d.paused=false;
-  d.startTime = Date.now() - (d.secs * 1000);
+  d.sessionPrice=priceOf(d.type);
+  d.startTime=Date.now()-(d.secs*1000);
   renderAll(); saveData();
 }
-function pauseDev(id)  {
+function pauseDev(id){
   var d=findDev(id);
-  if(d.startTime) d.secs = Math.floor((Date.now() - d.startTime) / 1000);
+  if(d.startTime) d.secs=Math.floor((Date.now()-d.startTime)/1000);
   d.running=false; d.paused=true; d.startTime=null;
   renderAll(); saveData();
 }
-function resumeDev(id) {
+function resumeDev(id){
   var d=findDev(id);
   d.running=true; d.paused=false;
-  d.startTime = Date.now() - (d.secs * 1000);
+  d.startTime=Date.now()-(d.secs*1000);
+  renderAll(); saveData();
+}
+function stopDev(id){
+  var d=findDev(id);
+  if(d.running&&d.startTime) d.secs=Math.floor((Date.now()-d.startTime)/1000);
+  if(d.secs>0){
+    d.sessions.unshift({date:new Date().toLocaleString('uz-UZ',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),duration:d.secs,earned:earnNow(d)});
+    if(d.sessions.length>50) d.sessions.pop();
+  }
+  d.running=false; d.paused=false; d.secs=0; d.startTime=null; d.sessionPrice=null;
   renderAll(); saveData();
 }
 
-function stopDev(id) {
+// ═══════════════════════════════════════
+// HISTORY MODAL
+// ═══════════════════════════════════════
+function openHist(id){
   var d=findDev(id);
-  if(d.running && d.startTime) {
-    d.secs = Math.floor((Date.now() - d.startTime) / 1000);
-  }
-  if(d.secs>0){
-    d.sessions.unshift({
-      date: new Date().toLocaleString('uz-UZ',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),
-      duration: d.secs,
-      earned: earnNow(d)
-    });
-    if(d.sessions.length>30) d.sessions.pop();
-  }
-  d.running=false; d.paused=false; d.secs=0; d.startTime=null;
-  renderAll();
-  saveData();
-}
-
-// ── HISTORY ──
-function openHist(id) {
-  var d=findDev(id);
-  document.getElementById('modal-title').textContent = (d.type==='ps'?'🎮 ':'🎱 ')+d.name+' — Sessiyalar';
+  document.getElementById('modal-title').textContent=(d.type==='ps'?'🎮 ':'🎱 ')+d.name+' — Sessiyalar';
   var html='';
-  if(!d.sessions.length){
-    html='<div class="no-hist">Hali sessiya yoʻq</div>';
-  } else {
+  if(!d.sessions.length) html='<div class="no-hist">Hali sessiya yo\'q</div>';
+  else{
     var tot=d.sessions.reduce(function(a,b){return a+b.earned;},0);
-    d.sessions.forEach(function(x){
-      html+='<div class="h-item"><div><div class="h-dur">'+fmt(x.duration)+'</div><div class="h-date">'+x.date+'</div></div><div class="h-earn">'+x.earned.toLocaleString()+' soʻm</div></div>';
-    });
+    d.sessions.forEach(function(x){ html+='<div class="h-item"><div><div class="h-dur">'+fmt(x.duration)+'</div><div class="h-date">'+x.date+'</div></div><div class="h-earn">'+x.earned.toLocaleString()+' soʻm</div></div>'; });
     html+='<div class="h-total">Jami: '+tot.toLocaleString()+' soʻm</div>';
   }
-  document.getElementById('modal-body').innerHTML = html;
-  document.getElementById('modal').className = 'modal-overlay on';
+  document.getElementById('modal-body').innerHTML=html;
+  document.getElementById('modal').className='modal-overlay on';
 }
-function closeModal(){ document.getElementById('modal').className = 'modal-overlay'; }
-function modalBgClick(e){ if(e.target.id==='modal') closeModal(); }
+function closeModal(){ document.getElementById('modal').className='modal-overlay'; }
 
-// ── END DAY ──
+// ═══════════════════════════════════════
+// END DAY
+// ═══════════════════════════════════════
 function endDay(){
   var tot=grandTotal();
-  if(confirm('Kunni yakunlaysizmi?\n\n🎮 PS: '+groupTotal(psDevs).toLocaleString()+' soʻm\n🎱 Billiard: '+groupTotal(billDevs).toLocaleString()+' soʻm\n\n💰 Jami: '+tot.toLocaleString()+' soʻm')){
-    allDevs().forEach(function(d){ d.running=false; d.paused=false; d.secs=0; d.sessions=[]; });
-    saveData();
-    renderAll();
-    if(curTab==='sum') refreshSummary();
+  if(!confirm('Kunni yakunlaysizmi?\n\n🎮 PS: '+groupTotal(psDevs).toLocaleString()+' soʻm\n🎱 Billiard: '+groupTotal(billDevs).toLocaleString()+' soʻm\n\n💰 Jami: '+tot.toLocaleString()+' soʻm')) return;
+  var today=new Date().toLocaleDateString('uz-UZ',{day:'2-digit',month:'2-digit',year:'numeric'});
+  dayHistory.unshift({date:today,ps:groupTotal(psDevs),bill:groupTotal(billDevs),total:tot});
+  if(dayHistory.length>60) dayHistory.pop();
+  allDevs().forEach(function(d){d.running=false;d.paused=false;d.secs=0;d.sessions=[];d.startTime=null;d.sessionPrice=null;});
+  saveData(); renderAll();
+  if(curTab==='sum') refreshSummary();
+  showToast('🏁 Kun yakunlandi! Jami: '+tot.toLocaleString()+' soʻm');
+}
+
+// ═══════════════════════════════════════
+// AUTO MIDNIGHT
+// ═══════════════════════════════════════
+function checkMidnight(){
+  var lastDate=localStorage.getItem('gc_last_date');
+  var today=new Date().toDateString();
+  if(lastDate&&lastDate!==today){
+    var tot=grandTotal();
+    if(tot>0){
+      var d=new Date(lastDate);
+      var ds=d.toLocaleDateString('uz-UZ',{day:'2-digit',month:'2-digit',year:'numeric'});
+      dayHistory.unshift({date:ds,ps:groupTotal(psDevs),bill:groupTotal(billDevs),total:tot});
+      if(dayHistory.length>60) dayHistory.pop();
+    }
+    allDevs().forEach(function(d){d.running=false;d.paused=false;d.secs=0;d.sessions=[];d.startTime=null;d.sessionPrice=null;});
+    saveData(); renderAll();
+  }
+  localStorage.setItem('gc_last_date',today);
+}
+
+// ═══════════════════════════════════════
+// CSV EXPORT
+// ═══════════════════════════════════════
+function exportCSV(){
+  var rows=[['Sana','Qurilma','Turi','Davomiyligi (daq)','Daromad (soʻm)']];
+  // Kunlik tarix
+  dayHistory.forEach(function(day){
+    rows.push([day.date,'JAMI PS','PS','',day.ps]);
+    rows.push([day.date,'JAMI Billiard','Billiard','',day.bill]);
+    rows.push([day.date,'JAMI','','',day.total]);
+    rows.push(['','','','','']);
+  });
+  // Joriy sessiyalar
+  var today=new Date().toLocaleDateString('uz-UZ',{day:'2-digit',month:'2-digit',year:'numeric'});
+  allDevs().forEach(function(d){
+    d.sessions.forEach(function(s){
+      rows.push([today,d.name,d.type==='ps'?'PlayStation':'Billiard',Math.round(s.duration/60),s.earned]);
+    });
+  });
+  var csv=rows.map(function(r){return r.join(';');}).join('\n');
+  var bom='\uFEFF'; // Excel uchun UTF-8 BOM
+  var blob=new Blob([bom+csv],{type:'text/csv;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='gameclub-hisobot-'+today.replace(/\./g,'-')+'.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📊 CSV fayl saqlandi!');
+}
+
+// ═══════════════════════════════════════
+// JSON EXPORT / IMPORT
+// ═══════════════════════════════════════
+function exportData(){
+  var data={version:3,date:new Date().toISOString(),psPrice:psPrice,billPrice:billPrice,psDevs:psDevs,billDevs:billDevs,dayHistory:dayHistory};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='gameclub-backup-'+new Date().toLocaleDateString('uz-UZ').replace(/\./g,'-')+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📤 Zaxira fayli saqlandi!');
+}
+
+function importData(event){
+  var file=event.target.files[0];
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      if(data.psDevs) psDevs=data.psDevs;
+      if(data.billDevs) billDevs=data.billDevs;
+      if(data.psPrice){psPrice=data.psPrice;document.getElementById('inp-ps').value=psPrice;}
+      if(data.billPrice){billPrice=data.billPrice;document.getElementById('inp-bill').value=billPrice;}
+      if(data.dayHistory) dayHistory=data.dayHistory;
+      saveData(); renderAll();
+      showToast('✅ Ma\'lumotlar tiklandi!');
+    }catch(err){ showToast('❌ Fayl noto\'g\'ri!'); }
+  };
+  reader.readAsText(file);
+  event.target.value='';
+}
+
+// ═══════════════════════════════════════
+// LOCALSTORAGE
+// ═══════════════════════════════════════
+function saveData(){
+  try{
+    localStorage.setItem('gc_psPrice',psPrice);
+    localStorage.setItem('gc_billPrice',billPrice);
+    localStorage.setItem('gc_psDevs',JSON.stringify(psDevs));
+    localStorage.setItem('gc_billDevs',JSON.stringify(billDevs));
+    localStorage.setItem('gc_dayHistory',JSON.stringify(dayHistory));
+    var el=document.getElementById('save-status');
+    if(el) el.textContent='✅ Saqlangan';
+  }catch(e){
+    var el=document.getElementById('save-status');
+    if(el) el.textContent='❌ Xato';
   }
 }
 
-// ── LOCALSTORAGE ──
-function saveData() {
-  try {
-    localStorage.setItem('gc_psPrice',   psPrice);
-    localStorage.setItem('gc_billPrice', billPrice);
-    localStorage.setItem('gc_psDevs',   JSON.stringify(psDevs));
-    localStorage.setItem('gc_billDevs', JSON.stringify(billDevs));
-  } catch(e) {}
+function loadData(){
+  try{
+    var p=localStorage.getItem('gc_psPrice');
+    var b=localStorage.getItem('gc_billPrice');
+    if(p){psPrice=parseInt(p);document.getElementById('inp-ps').value=psPrice;}
+    if(b){billPrice=parseInt(b);document.getElementById('inp-bill').value=billPrice;}
+    var pd=localStorage.getItem('gc_psDevs');
+    var bd=localStorage.getItem('gc_billDevs');
+    var dh=localStorage.getItem('gc_dayHistory');
+    if(pd){var l=JSON.parse(pd);l.forEach(function(d){if(d.running&&d.startTime)d.secs=Math.floor((Date.now()-d.startTime)/1000);});psDevs=l;}
+    if(bd){var l2=JSON.parse(bd);l2.forEach(function(d){if(d.running&&d.startTime)d.secs=Math.floor((Date.now()-d.startTime)/1000);});billDevs=l2;}
+    if(dh) dayHistory=JSON.parse(dh);
+  }catch(e){}
 }
 
-function loadData() {
-  try {
-    var p = localStorage.getItem('gc_psPrice');
-    var b = localStorage.getItem('gc_billPrice');
-    if(p) { psPrice   = parseInt(p); document.getElementById('inp-ps').value   = psPrice; }
-    if(b) { billPrice = parseInt(b); document.getElementById('inp-bill').value = billPrice; }
+function setPsPrice(v){var n=parseInt(v);if(n>0){psPrice=n;saveData();}refreshMeta();}
+function setBillPrice(v){var n=parseInt(v);if(n>0){billPrice=n;saveData();}refreshMeta();}
 
-    var pd = localStorage.getItem('gc_psDevs');
-    var bd = localStorage.getItem('gc_billDevs');
-    if(pd) {
-      var loaded = JSON.parse(pd);
-      loaded.forEach(function(d){
-        // Agar sessiya ochiq qolgan bo'lsa, o'tgan vaqtni hisoblash
-        if(d.running && d.startTime) {
-          d.secs = Math.floor((Date.now() - d.startTime) / 1000);
-        }
-      });
-      psDevs = loaded;
-    }
-    if(bd) {
-      var loaded2 = JSON.parse(bd);
-      loaded2.forEach(function(d){
-        if(d.running && d.startTime) {
-          d.secs = Math.floor((Date.now() - d.startTime) / 1000);
-        }
-      });
-      billDevs = loaded2;
-    }
-  } catch(e) {}
-}
-
-// ── PRICE SETTERS ──
-function setPsPrice(v){   var n=parseInt(v); if(n>0){ psPrice=n;   saveData(); } refreshMeta(); }
-function setBillPrice(v){ var n=parseInt(v); if(n>0){ billPrice=n; saveData(); } refreshMeta(); }
-
-// ── TICK ──
-var tickCount = 0;
+// ═══════════════════════════════════════
+// TICK
+// ═══════════════════════════════════════
+var _tc=0;
 setInterval(function(){
   var any=false;
-  allDevs().forEach(function(d){
-    if(d.running && d.startTime){
-      d.secs = Math.floor((Date.now() - d.startTime) / 1000);
-      any=true;
-    }
-  });
+  allDevs().forEach(function(d){if(d.running&&d.startTime){d.secs=Math.floor((Date.now()-d.startTime)/1000);any=true;}});
   if(any){
     allDevs().forEach(function(d){
       var tm=document.getElementById('tm-'+d.id);
@@ -606,25 +917,20 @@ setInterval(function(){
     });
     refreshMeta();
     if(curTab==='sum') refreshSummary();
-    tickCount++;
-    if(tickCount % 10 === 0) saveData();
+    _tc++;
+    if(_tc%15===0) saveData();
   }
-}, 1000);
+},1000);
 
-// ── INIT ──
-loadData();
-renderAll();
-</script>
-<script>
-// Reklamani dinamik olib tashlash
-function removeAds(){
-  document.querySelectorAll("iframe,[id*=ad],[class*=ad],a[href*=appsgeyser]").forEach(function(el){
-    el.style.display="none";
-    el.style.height="0";
-  });
-}
-setInterval(removeAds, 500);
-removeAds();
+// Reklama bloklash
+setInterval(function(){
+  document.querySelectorAll("iframe,[id*=ad],[class*=ad],a[href*=appsgeyser]").forEach(function(el){el.style.display='none';el.style.height='0';});
+},500);
+
+// ═══════════════════════════════════════
+// START
+// ═══════════════════════════════════════
+initLock();
 </script>
 </body>
 </html>
