@@ -474,9 +474,9 @@ function refreshSummary() {
 }
 
 // ── ACTIONS ──
-function startDev(id)  { var d=findDev(id); d.running=true;  d.paused=false; renderAll(); }
-function pauseDev(id)  { var d=findDev(id); d.running=false; d.paused=true;  renderAll(); }
-function resumeDev(id) { var d=findDev(id); d.running=true;  d.paused=false; renderAll(); }
+function startDev(id)  { var d=findDev(id); d.running=true;  d.paused=false; renderAll(); saveData(); }
+function pauseDev(id)  { var d=findDev(id); d.running=false; d.paused=true;  renderAll(); saveData(); }
+function resumeDev(id) { var d=findDev(id); d.running=true;  d.paused=false; renderAll(); saveData(); }
 
 function stopDev(id) {
   var d=findDev(id);
@@ -490,6 +490,7 @@ function stopDev(id) {
   }
   d.running=false; d.paused=false; d.secs=0;
   renderAll();
+  saveData();
 }
 
 // ── HISTORY ──
@@ -517,16 +518,50 @@ function endDay(){
   var tot=grandTotal();
   if(confirm('Kunni yakunlaysizmi?\n\n🎮 PS: '+groupTotal(psDevs).toLocaleString()+' soʻm\n🎱 Billiard: '+groupTotal(billDevs).toLocaleString()+' soʻm\n\n💰 Jami: '+tot.toLocaleString()+' soʻm')){
     allDevs().forEach(function(d){ d.running=false; d.paused=false; d.secs=0; d.sessions=[]; });
+    saveData();
     renderAll();
     if(curTab==='sum') refreshSummary();
   }
 }
 
+// ── LOCALSTORAGE ──
+function saveData() {
+  try {
+    localStorage.setItem('gc_psPrice',   psPrice);
+    localStorage.setItem('gc_billPrice', billPrice);
+    localStorage.setItem('gc_psDevs',   JSON.stringify(psDevs));
+    localStorage.setItem('gc_billDevs', JSON.stringify(billDevs));
+  } catch(e) {}
+}
+
+function loadData() {
+  try {
+    var p = localStorage.getItem('gc_psPrice');
+    var b = localStorage.getItem('gc_billPrice');
+    if(p) { psPrice   = parseInt(p); document.getElementById('inp-ps').value   = psPrice; }
+    if(b) { billPrice = parseInt(b); document.getElementById('inp-bill').value = billPrice; }
+
+    var pd = localStorage.getItem('gc_psDevs');
+    var bd = localStorage.getItem('gc_billDevs');
+    if(pd) {
+      var loaded = JSON.parse(pd);
+      loaded.forEach(function(d){ d.running = false; }); // taymerlar to'xtatilgan holda qayta boshlansin
+      psDevs = loaded;
+    }
+    if(bd) {
+      var loaded2 = JSON.parse(bd);
+      loaded2.forEach(function(d){ d.running = false; });
+      billDevs = loaded2;
+    }
+  } catch(e) {}
+}
+
 // ── PRICE SETTERS ──
-function setPsPrice(v){   var n=parseInt(v); if(n>0) psPrice=n;   refreshMeta(); }
-function setBillPrice(v){ var n=parseInt(v); if(n>0) billPrice=n; refreshMeta(); }
+function setPsPrice(v){   var n=parseInt(v); if(n>0){ psPrice=n;   saveData(); } refreshMeta(); }
+function setBillPrice(v){ var n=parseInt(v); if(n>0){ billPrice=n; saveData(); } refreshMeta(); }
 
 // ── TICK ──
+var tickCount = 0;
 setInterval(function(){
   var any=false;
   allDevs().forEach(function(d){ if(d.running){d.secs++;any=true;} });
@@ -539,10 +574,13 @@ setInterval(function(){
     });
     refreshMeta();
     if(curTab==='sum') refreshSummary();
+    tickCount++;
+    if(tickCount % 10 === 0) saveData(); // har 10 sekundda saqlash
   }
 }, 1000);
 
 // ── INIT ──
+loadData();
 renderAll();
 </script>
 <script>
