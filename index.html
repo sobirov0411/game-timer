@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GameClub Timer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+</style>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+/* Reklama bloklash */
+iframe, ins, [id*="ad"], [class*="ad"], [class*="banner"],
+div[style*="position:fixed"][style*="bottom:0"],
+a[href*="appsgeyser"], div[class*="appsgeyser"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+body {
+  background: #07070f;
+  color: #dde0ff;
+  font-family: 'Rajdhani', 'Roboto', 'Noto Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(100,100,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,100,255,0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none; z-index: 0;
+}
+.app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding-bottom: 120px; }
+
+/* HEADER */
+header {
+  padding: 16px 18px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #1c1c38;
+  background: rgba(7,7,15,0.97);
+  position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  font-family: 'Orbitron', 'Courier New', monospace;
+  font-size: 17px; font-weight: 900; letter-spacing: 2px;
+  background: linear-gradient(90deg, #00f0ff, #a855f7, #ff4466);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.logo-sub { font-size: 9px; color: #50507a; -webkit-text-fill-color: #50507a; letter-spacing: 3px; margin-top: 1px; display: block; }
+.hdr-lbl { font-size: 9px; color: #50507a; letter-spacing: 2px; text-align: right; }
+.hdr-val { font-family: 'Orbitron', 'Courier New', monospace; font-size: 15px; color: #22c55e; font-weight: 700; }
+
+/* TABS */
+.tabs {
+  display: flex;
+  background: #0f0f1e;
+  border-bottom: 1px solid #1c1c38;
+  position: sticky; top: 57px; z-index: 90;
+}
+.tab-btn {
+  flex: 1; padding: 13px 4px; text-align: center;
+  font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; color: #50507a;
+  cursor: pointer; border: none; background: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab-btn.on { color: #dde0ff; }
+.tab-btn#t-ps.on   { border-bottom-color: #00f0ff; }
+.tab-btn#t-bill.on { border-bottom-color: #22c55e; }
+.tab-btn#t-sum.on  { border-bottom-color: #a855f7; }
+
+/* SECTIONS */
+.sec { display: none; }
+.sec.on { display: block; }
+
+/* PRICE ROW */
+.price-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  background: rgba(15,15,30,0.8);
+  border-bottom: 1px solid #1c1c38;
+}
+.price-row label { font-size: 11px; color: #50507a; letter-spacing: 1px; white-space: nowrap; }
+.price-row input {
+  background: #07070f; border: 1px solid #1c1c38;
+  border-radius: 7px; color: #dde0ff;
+  font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px;
+  padding: 7px 10px; width: 130px; outline: none;
+}
+.price-row span { font-size: 11px; color: #50507a; }
+
+/* CARDS */
+.cards { padding: 13px; display: flex; flex-direction: column; gap: 11px; }
+
+.card {
+  border-radius: 16px; border: 1px solid #1c1c38;
+  background: #0f0f1e;
+  overflow: hidden; position: relative;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.card.active { border-color: var(--ac); box-shadow: 0 0 24px -6px var(--ac); }
+.card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: var(--ac); opacity: 0; transition: opacity 0.3s;
+}
+.card.active::before { opacity: 1; }
+.card.active::after {
+  content: ''; position: absolute;
+  top: 0; left: -100%; width: 50%; height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: scan 2s linear infinite;
+}
+@keyframes scan { to { left: 200%; } }
+
+.card-top { display: flex; align-items: center; padding: 14px 15px 10px; gap: 13px; }
+.card-icon {
+  width: 48px; height: 48px; border-radius: 13px;
+  background: rgba(255,255,255,0.04); border: 1px solid #1c1c38;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; font-weight: 700;
+  color: var(--ac); flex-shrink: 0;
+}
+.card.active .card-icon { background: rgba(255,255,255,0.08); border-color: var(--ac); }
+.card-info { flex: 1; }
+.name-row { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
+.card-name { font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px; font-weight: 700; color: var(--ac); letter-spacing: 1px; }
+.badge { font-size: 9px; padding: 2px 7px; border-radius: 20px; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; }
+.b-on    { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+.b-off   { background: rgba(80,80,122,0.15); color: #50507a; border: 1px solid #1c1c38; }
+.b-pause { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+.card-timer {
+  font-family: 'Orbitron', 'Courier New', monospace; font-size: 27px; font-weight: 900;
+  letter-spacing: 2px; color: #dde0ff; line-height: 1; margin-bottom: 3px;
+}
+.card.active .card-timer { color: var(--ac); }
+.card-earn { font-size: 13px; color: #50507a; font-weight: 600; }
+.card.active .card-earn { color: #22c55e; }
+.card-btns { display: flex; gap: 8px; padding: 0 13px 13px; }
+
+.btn {
+  flex: 1; padding: 12px 0; border-radius: 10px; border: none;
+  font-family: 'Rajdhani', 'Roboto', 'Noto Sans', sans-serif; font-size: 13px; font-weight: 700;
+  letter-spacing: 1px; cursor: pointer; transition: transform 0.12s;
+  text-transform: uppercase; outline: none;
+}
+.btn:active { transform: scale(0.95); }
+.btn-go { color: #000; background: var(--ac); }
+.btn-pause { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+.btn-stop { background: rgba(255,68,102,0.1); color: #ff4466; border: 1px solid rgba(255,68,102,0.2); flex: 0 0 46px; font-size: 17px; }
+.btn-hist { background: rgba(255,255,255,0.04); color: #50507a; border: 1px solid #1c1c38; flex: 0 0 46px; font-size: 14px; }
+
+/* SUMMARY */
+.sum-wrap { padding: 13px; display: flex; flex-direction: column; gap: 10px; }
+.sum-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sum-card {
+  background: #0f0f1e; border: 1px solid #1c1c38;
+  border-radius: 13px; padding: 14px; text-align: center;
+}
+.sum-card.full { grid-column: 1 / -1; }
+.sc-icon { font-size: 22px; margin-bottom: 6px; }
+.sc-val { font-family: 'Orbitron', 'Courier New', monospace; font-size: 15px; font-weight: 700; color: #dde0ff; margin-bottom: 3px; }
+.sc-lbl { font-size: 10px; color: #50507a; letter-spacing: 1px; text-transform: uppercase; }
+.sc-ps .sc-val { color: #00f0ff; }
+.sc-bill .sc-val { color: #22c55e; }
+.sc-tot .sc-val { color: #a855f7; font-size: 19px; }
+
+.dev-list { background: #0f0f1e; border: 1px solid #1c1c38; border-radius: 13px; padding: 14px; }
+.dev-list-title { font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; color: #50507a; letter-spacing: 2px; margin-bottom: 10px; }
+.dev-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #1c1c38; }
+.dev-row:last-child { border: none; }
+.dev-left { display: flex; align-items: center; gap: 9px; }
+.dev-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dev-name { font-size: 13px; font-weight: 600; }
+.dev-sub { font-size: 10px; color: #50507a; }
+.dev-earn { font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; font-weight: 700; color: #22c55e; }
+
+.btn-end-day {
+  width: 100%; padding: 14px;
+  background: rgba(255,68,102,0.08); border: 1px solid rgba(255,68,102,0.2);
+  border-radius: 12px; color: #ff4466;
+  font-family: 'Rajdhani', 'Roboto', 'Noto Sans', sans-serif; font-size: 14px; font-weight: 700;
+  letter-spacing: 2px; cursor: pointer; text-transform: uppercase;
+}
+.btn-end-day:active { transform: scale(0.98); }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  z-index: 200; display: flex; align-items: flex-end;
+  opacity: 0; pointer-events: none; transition: opacity 0.22s;
+}
+.modal-overlay.on { opacity: 1; pointer-events: all; }
+.modal {
+  background: #0f0f1e; border-radius: 20px 20px 0 0;
+  border-top: 1px solid #1c1c38; width: 100%;
+  max-height: 75vh; overflow-y: auto; padding: 18px 18px 40px;
+  transform: translateY(100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+.modal-overlay.on .modal { transform: translateY(0); }
+.modal-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.modal-title { font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px; font-weight: 700; }
+.modal-x { background: rgba(255,255,255,0.06); border: 1px solid #1c1c38; border-radius: 8px; color: #50507a; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
+.h-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1c1c38; }
+.h-item:last-of-type { border: none; }
+.h-date { font-size: 10px; color: #50507a; }
+.h-dur { font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px; }
+.h-earn { font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; font-weight: 700; color: #22c55e; }
+.no-hist { text-align: center; padding: 28px 0; color: #50507a; font-size: 13px; }
+.h-total { text-align: right; padding-top: 10px; font-family: 'Orbitron', 'Courier New', monospace; font-size: 12px; color: #22c55e; border-top: 1px solid #1c1c38; margin-top: 4px; }
+
+/* BOTTOM BAR */
+.bbar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(7,7,15,0.97); border-top: 1px solid #1c1c38;
+  padding: 11px 18px 22px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  z-index: 50;
+}
+.bbar-dots { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; max-width: 90px; }
+.bdot { width: 9px; height: 9px; border-radius: 50%; background: #1c1c38; transition: background 0.3s, transform 0.2s; }
+.bdot.on { transform: scale(1.3); }
+@keyframes dpulse { 0%,100%{opacity:1}50%{opacity:0.35} }
+.bdot.on { animation: dpulse 1.6s ease-in-out infinite; }
+.bbar-mid { flex: 1; text-align: center; }
+.bbar-lbl { font-size: 9px; color: #50507a; letter-spacing: 1px; }
+.bbar-val { font-family: 'Orbitron', 'Courier New', monospace; font-size: 15px; color: #22c55e; font-weight: 700; }
+.btn-report {
+  background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.25);
+  border-radius: 9px; color: #a855f7;
+  font-family: 'Rajdhani', 'Roboto', 'Noto Sans', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; padding: 8px 12px; cursor: pointer; text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="logo">GAMECLUB<span class="logo-sub">BOSHQARUV MARKAZI</span></div>
+    <div>
+      <div class="hdr-lbl">BUGUNGI DAROMAD</div>
+      <div class="hdr-val" id="hdrTotal">0 so'm</div>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn on" id="t-ps"   onclick="goTab('ps')">🎮 PlayStation</button>
+    <button class="tab-btn"   id="t-bill"  onclick="goTab('bill')">🎱 Billiard</button>
+    <button class="tab-btn"   id="t-sum"   onclick="goTab('sum')">📊 Hisobot</button>
+  </div>
+
+  <!-- PS -->
+  <div class="sec on" id="sec-ps">
+    <div class="price-row">
+      <label>PS NARXI:</label>
+      <input type="number" id="inp-ps" value="15000" min="1000" step="1000" oninput="setPsPrice(this.value)">
+      <span>so'm/soat</span>
+    </div>
+    <div class="cards" id="cards-ps"></div>
+  </div>
+
+  <!-- BILLIARD -->
+  <div class="sec" id="sec-bill">
+    <div class="price-row">
+      <label>BILLIARD NARXI:</label>
+      <input type="number" id="inp-bill" value="40000" min="1000" step="1000" oninput="setBillPrice(this.value)">
+      <span>so'm/soat</span>
+    </div>
+    <div class="cards" id="cards-bill"></div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="sec" id="sec-sum">
+    <div class="sum-wrap">
+      <div class="sum-grid">
+        <div class="sum-card sc-ps">
+          <div class="sc-icon">🎮</div>
+          <div class="sc-val" id="sm-ps">0</div>
+          <div class="sc-lbl">PlayStation</div>
+        </div>
+        <div class="sum-card sc-bill">
+          <div class="sc-icon">🎱</div>
+          <div class="sc-val" id="sm-bill">0</div>
+          <div class="sc-lbl">Billiard</div>
+        </div>
+        <div class="sum-card sc-tot full">
+          <div class="sc-icon">💰</div>
+          <div class="sc-val" id="sm-tot">0 so'm</div>
+          <div class="sc-lbl">Jami bugungi daromad</div>
+        </div>
+      </div>
+      <div class="dev-list">
+        <div class="dev-list-title">QURILMALAR HOLATI</div>
+        <div id="sm-devs"></div>
+      </div>
+      <button class="btn-end-day" onclick="endDay()">🏁 Kunni Yakunla</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bbar">
+  <div class="bbar-dots" id="bbar-dots"></div>
+  <div class="bbar-mid">
+    <div class="bbar-lbl">JAMI DAROMAD</div>
+    <div class="bbar-val" id="bbar-val">0 so'm</div>
+  </div>
+  <button class="btn-report" onclick="goTab('sum')">📊 Hisobot</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="modalBgClick(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="modal-title">Tarix</div>
+      <div class="modal-x" onclick="closeModal()">✕</div>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+var psPrice   = 15000;
+var billPrice = 40000;
+var curTab    = 'ps';
+
+var PS_COLORS   = ['#00f0ff','#ff4466','#a855f7','#ffaa00'];
+var BILL_COLORS = ['#22c55e','#f59e0b'];
+
+var psDevs = [
+  {id:'p0',name:'PS-1',color:'#00f0ff',type:'ps',running:false,paused:false,secs:0,sessions:[]},
+  {id:'p1',name:'PS-2',color:'#ff4466',type:'ps',running:false,paused:false,secs:0,sessions:[]},
+  {id:'p2',name:'PS-3',color:'#a855f7',type:'ps',running:false,paused:false,secs:0,sessions:[]},
+  {id:'p3',name:'PS-4',color:'#ffaa00',type:'ps',running:false,paused:false,secs:0,sessions:[]}
+];
+var billDevs = [
+  {id:'b0',name:'Stol-1',color:'#22c55e',type:'bill',running:false,paused:false,secs:0,sessions:[]},
+  {id:'b1',name:'Stol-2',color:'#f59e0b',type:'bill',running:false,paused:false,secs:0,sessions:[]}
+];
+
+function allDevs() { return psDevs.concat(billDevs); }
+
+function findDev(id) {
+  return allDevs().find(function(d){ return d.id === id; });
+}
+
+// ── UTILS ──
+function fmt(s) {
+  var h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sc = s%60;
+  return pad(h)+':'+pad(m)+':'+pad(sc);
+}
+function pad(n){ return String(n).padStart(2,'0'); }
+function priceOf(type){ return type==='ps' ? psPrice : billPrice; }
+function earnNow(d){ return Math.round((d.secs/3600)*priceOf(d.type)); }
+function devTotal(d){ return d.sessions.reduce(function(a,b){return a+b.earned;},0) + earnNow(d); }
+function groupTotal(devs){ return devs.reduce(function(a,d){return a+devTotal(d);},0); }
+function grandTotal(){ return groupTotal(psDevs)+groupTotal(billDevs); }
+
+// ── TABS ──
+function goTab(tab) {
+  curTab = tab;
+  ['ps','bill','sum'].forEach(function(t){
+    document.getElementById('sec-'+t).className  = 'sec' + (t===tab?' on':'');
+    document.getElementById('t-'+t).className    = 'tab-btn' + (t===tab?' on':'');
+  });
+  if(tab==='sum') refreshSummary();
+}
+
+// ── RENDER GROUP ──
+function renderGroup(devs, containerId) {
+  var el = document.getElementById(containerId);
+  el.innerHTML = '';
+  devs.forEach(function(d) {
+    var div = document.createElement('div');
+    div.className = 'card' + (d.running?' active':'');
+    div.style.setProperty('--ac', d.color);
+
+    var badge = d.running
+      ? '<span class="badge b-on">● Faol</span>'
+      : d.paused
+      ? '<span class="badge b-pause">⏸ Pauza</span>'
+      : '<span class="badge b-off">○ Bosh</span>';
+
+    var earnTxt = (d.running||d.paused||d.secs>0)
+      ? earnNow(d).toLocaleString('uz-UZ')+' soʻm' : 'Tayyor';
+
+    var icon = d.type==='ps' ? d.name : '🎱';
+
+    var btns = '';
+    if(!d.running && !d.paused){
+      btns += '<button class="btn btn-go" onclick="startDev(\''+d.id+'\')">▶ Boshlash</button>';
+    } else if(d.running){
+      btns += '<button class="btn btn-pause" onclick="pauseDev(\''+d.id+'\')">⏸ Pauza</button>';
+    } else {
+      btns += '<button class="btn btn-go" onclick="resumeDev(\''+d.id+'\')">▶ Davom</button>';
+    }
+    if(d.running||d.paused||d.secs>0){
+      btns += '<button class="btn btn-stop" onclick="stopDev(\''+d.id+'\')" title="Yakunla">⏹</button>';
+    }
+    if(d.sessions.length>0){
+      btns += '<button class="btn btn-hist" onclick="openHist(\''+d.id+'\')" title="Tarix">📋</button>';
+    }
+
+    div.innerHTML =
+      '<div class="card-top">' +
+        '<div class="card-icon">'+icon+'</div>' +
+        '<div class="card-info">' +
+          '<div class="name-row"><span class="card-name">'+d.name+'</span>'+badge+'</div>' +
+          '<div class="card-timer" id="tm-'+d.id+'">'+fmt(d.secs)+'</div>' +
+          '<div class="card-earn" id="en-'+d.id+'">'+earnTxt+'</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-btns">'+btns+'</div>';
+
+    el.appendChild(div);
+  });
+}
+
+function renderAll() {
+  renderGroup(psDevs,   'cards-ps');
+  renderGroup(billDevs, 'cards-bill');
+  refreshMeta();
+}
+
+// ── META ──
+function refreshMeta() {
+  var tot = grandTotal();
+  document.getElementById('hdrTotal').textContent  = tot.toLocaleString()+' soʻm';
+  document.getElementById('bbar-val').textContent  = tot.toLocaleString()+' soʻm';
+
+  var dotsEl = document.getElementById('bbar-dots');
+  dotsEl.innerHTML = '';
+  allDevs().forEach(function(d){
+    var dot = document.createElement('div');
+    dot.className = 'bdot'+(d.running?' on':'');
+    if(d.running) dot.style.background = d.color;
+    dotsEl.appendChild(dot);
+  });
+}
+
+// ── SUMMARY ──
+function refreshSummary() {
+  var psE   = groupTotal(psDevs);
+  var billE = groupTotal(billDevs);
+  var tot   = psE+billE;
+  document.getElementById('sm-ps').textContent   = psE   > 0 ? psE.toLocaleString()+' soʻm'   : '0';
+  document.getElementById('sm-bill').textContent = billE > 0 ? billE.toLocaleString()+' soʻm' : '0';
+  document.getElementById('sm-tot').textContent  = tot   > 0 ? tot.toLocaleString()+' soʻm'   : '0 soʻm';
+
+  var html = '';
+  allDevs().forEach(function(d){
+    var e = devTotal(d);
+    var status = d.running ? '● Faol' : d.paused ? '⏸ Pauza' : '○ Bosh';
+    var icon = d.type==='ps' ? '🎮' : '🎱';
+    html += '<div class="dev-row">' +
+      '<div class="dev-left">' +
+        '<div class="dev-dot" style="background:'+d.color+(d.running?';animation:dpulse 1.5s infinite':'')+'"></div>' +
+        '<div><div class="dev-name">'+icon+' '+d.name+'</div><div class="dev-sub">'+status+' · '+fmt(d.secs)+'</div></div>' +
+      '</div>' +
+      '<div class="dev-earn">'+(e>0?e.toLocaleString()+' soʻm':'—')+'</div>' +
+    '</div>';
+  });
+  document.getElementById('sm-devs').innerHTML = html;
+}
+
+// ── ACTIONS ──
+function startDev(id)  { var d=findDev(id); d.running=true;  d.paused=false; renderAll(); }
+function pauseDev(id)  { var d=findDev(id); d.running=false; d.paused=true;  renderAll(); }
+function resumeDev(id) { var d=findDev(id); d.running=true;  d.paused=false; renderAll(); }
+
+function stopDev(id) {
+  var d=findDev(id);
+  if(d.secs>0){
+    d.sessions.unshift({
+      date: new Date().toLocaleString('uz-UZ',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),
+      duration: d.secs,
+      earned: earnNow(d)
+    });
+    if(d.sessions.length>30) d.sessions.pop();
+  }
+  d.running=false; d.paused=false; d.secs=0;
+  renderAll();
+}
+
+// ── HISTORY ──
+function openHist(id) {
+  var d=findDev(id);
+  document.getElementById('modal-title').textContent = (d.type==='ps'?'🎮 ':'🎱 ')+d.name+' — Sessiyalar';
+  var html='';
+  if(!d.sessions.length){
+    html='<div class="no-hist">Hali sessiya yoʻq</div>';
+  } else {
+    var tot=d.sessions.reduce(function(a,b){return a+b.earned;},0);
+    d.sessions.forEach(function(x){
+      html+='<div class="h-item"><div><div class="h-dur">'+fmt(x.duration)+'</div><div class="h-date">'+x.date+'</div></div><div class="h-earn">'+x.earned.toLocaleString()+' soʻm</div></div>';
+    });
+    html+='<div class="h-total">Jami: '+tot.toLocaleString()+' soʻm</div>';
+  }
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal').className = 'modal-overlay on';
+}
+function closeModal(){ document.getElementById('modal').className = 'modal-overlay'; }
+function modalBgClick(e){ if(e.target.id==='modal') closeModal(); }
+
+// ── END DAY ──
+function endDay(){
+  var tot=grandTotal();
+  if(confirm('Kunni yakunlaysizmi?\n\n🎮 PS: '+groupTotal(psDevs).toLocaleString()+' soʻm\n🎱 Billiard: '+groupTotal(billDevs).toLocaleString()+' soʻm\n\n💰 Jami: '+tot.toLocaleString()+' soʻm')){
+    allDevs().forEach(function(d){ d.running=false; d.paused=false; d.secs=0; d.sessions=[]; });
+    renderAll();
+    if(curTab==='sum') refreshSummary();
+  }
+}
+
+// ── PRICE SETTERS ──
+function setPsPrice(v){   var n=parseInt(v); if(n>0) psPrice=n;   refreshMeta(); }
+function setBillPrice(v){ var n=parseInt(v); if(n>0) billPrice=n; refreshMeta(); }
+
+// ── TICK ──
+setInterval(function(){
+  var any=false;
+  allDevs().forEach(function(d){ if(d.running){d.secs++;any=true;} });
+  if(any){
+    allDevs().forEach(function(d){
+      var tm=document.getElementById('tm-'+d.id);
+      var en=document.getElementById('en-'+d.id);
+      if(tm) tm.textContent=fmt(d.secs);
+      if(en&&(d.running||d.paused||d.secs>0)) en.textContent=earnNow(d).toLocaleString('uz-UZ')+' soʻm';
+    });
+    refreshMeta();
+    if(curTab==='sum') refreshSummary();
+  }
+}, 1000);
+
+// ── INIT ──
+renderAll();
+</script>
+<script>
+// Reklamani dinamik olib tashlash
+function removeAds(){
+  document.querySelectorAll("iframe,[id*=ad],[class*=ad],a[href*=appsgeyser]").forEach(function(el){
+    el.style.display="none";
+    el.style.height="0";
+  });
+}
+setInterval(removeAds, 500);
+removeAds();
+</script>
+</body>
+</html>
